@@ -1,0 +1,309 @@
+@import "../bootstrap/less/bootstrap.less";
+@import "../css/animate.css";
+@import "../css/chosen.css";
+
+/* TABLE OF CONTENTS
+=============================================================================
+  1. Variables & Mixins - Tools for LESS.
+  2. Globals - Default HTML element styling.
+  3. Library - Styling for custom classes used throughout the site.
+  4. Template - Styling for structure of the site.
+  5. Page Styles - Styling for page specific elements.
+  6. Media Queries - Styling for a range of screen sizes.
+  7. Legacy Browsers - Styling and fixes for legacy browsers.
+=============================================================================*/
+
+/* @group Variables & Mixins
+=============================================================================
+Tools for LESS.
+=============================================================================*/
+.animate(@duration: .75s, @delay: .5s, @timing-function: ease, @fill-mode: both, @animation: fadeIn) {
+  -webkit-animation-duration: @duration;
+  -webkit-animation-delay: @delay;
+  -webkit-animation-timing-function: @timing-function;
+  -webkit-animation-fill-mode: @fill-mode;
+  -webkit-animation-name: @animation;
+  -moz-animation-duration: @duration;
+  -moz-animation-delay: @delay;
+  -moz-animation-timing-function: @timing-function;
+  -moz-animation-fill-mode: @fill-mode;
+  -moz-animation-name: @animation;
+  animation-duration: @duration;
+  animation-delay: @delay;
+  animation-timing-function: @timing-function;
+  animation-fill-mode: @fill-mode;
+  animation-name: @animation;
+}
+
+.transition(@transition: all 0.4s ease-in-out) {
+  -webkit-transition: @transition;
+     -moz-transition: @transition;
+}
+
+.hide-text {
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+/* @end */
+
+/* @group Globals
+=============================================================================
+Styling for default HTML elements.
+=============================================================================*/
+body {
+  color: @grayLight;
+  font-size: 62.5%;
+  font: normal 14px/1.5 Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  .animate();
+}
+a, a:visited {
+}
+a:hover, a:active {
+  text-decoration: none;
+}
+p {
+  font: normal 14px/1.5 Helvetica, Arial, sans-serif;
+  a, a:visited {
+    color: @linkColor;
+    font-weight: bold;
+    .transition(color 0.4s ease-in-out);
+  }
+  a:hover, a:active {
+    color: @linkColorHover;
+    text-decoration: none;
+  }
+}
+small { font-size: 80%; }
+h1 {
+  &.logo {
+    background: url('../images/logo-forward.png') no-repeat 0 0;
+    display: block;
+    height: 98px;
+    text-indent: -9999px;
+    width: 284px;
+    a {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+h2 {
+}
+h3 {
+}
+/*::selection {
+}
+::-moz-selection {
+}*/
+/* @end */
+
+/* @group Library
+=============================================================================
+Styling for custom elements used throughout the site.
+=============================================================================*/
+.clearfix:after { clear: both; content: "."; display: block; height: 0; visibility: hidden; }
+.clearfix { display: block; }
+.selfclear { clear: both; }
+img.alignright { margin-left: 15px; }
+img.alignleft { margin-right: 15px; }
+.aligncenter { display: block; margin-left: auto; margin-right: auto; }
+.alignleft { float: left; }
+.alignright { float: right; }
+.textleft { text-align: left; }
+.textcenter { text-align: center; }
+.textright { text-align: right; }
+ul.horz li { display: inline-block; }
+.black { color: @black; }
+.close {
+  font-family: Pictos;
+}
+
+/* @group Forms */
+/* @end */
+
+/* @group Tables */
+/* @end */
+
+/* @group Buttons */
+/* @end */
+/* @end */
+
+/* @group Template
+=============================================================================
+Styling for structure of the site.
+=============================================================================*/
+.container {
+}
+header.primary {
+  padding: 20px 0;
+}
+
+nav.primary {
+  margin-top: 60px;
+}
+
+nav#social {
+  margin-top: 30px;
+  text-align: right;
+  ul {
+    margin: 0 0 15px 0;
+    li {
+      margin-left: 5px;
+      a {
+        background: url('../images/icon-social.png') no-repeat 0 0;
+        display: block;
+        height: 30px;
+        text-align: left;
+        text-indent: -9999px;
+        width: 30px;
+        .transition(opacity 0.3s ease-in-out);
+        &#facebook {
+          background-position: -39px 0;
+        }
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+
+section.primary {
+  margin-bottom: 30px;
+}
+
+aside.primary {
+}
+
+footer.primary {
+  margin-bottom: 30px;
+}
+/* @end */
+
+/* @group Page Styles
+=============================================================================
+Styling for page-specific elements.
+=============================================================================*/
+/* @group Front Page */
+.front {
+  #wrapper-mission {
+    background: @grayLighter;
+    margin-bottom: 50px;
+    padding: 15px 0;
+    .transition(background-color 0.4s ease-in-out);
+    &:hover {
+      background: darken(@grayLighter, 7%);
+    }
+    &.closed {
+      cursor: pointer;
+    }
+    &.open {
+      section#mission {
+        color: @grayDark;
+      }
+      &:hover {
+        background: @grayLighter;
+      }
+    }
+    section#mission {
+      height: 35px;
+      position: relative;
+      overflow: hidden;
+      p {
+        font: 100 italic 20px/2.0 Georgia, Times, serif;
+      }
+    }
+  }
+
+  #close-mission {
+    display: none;
+    position: absolute;
+    right: 40px;
+    top: 160px;
+  }
+
+  .wrapper-slider {
+    overflow: hidden;
+    margin: 0 0 50px 0;
+    position: relative;
+    width: 100%;
+    .slider {
+      width: 2000px;
+      img {
+        cursor: pointer;
+        float: left;
+        margin: 0 1px;
+      }
+    }
+  }
+
+  #send-me,
+  #two-forty-two {
+    display: block;
+    margin: 0 auto;
+    text-indent: -9999px;
+  }
+  #send-me {
+    background: url('../images/logo-send-me.png') no-repeat 0 0;
+    height: 86px;
+    width: 160px;
+  }
+  #two-forty-two {
+    background: url('../images/logo-242.png') no-repeat 0 0;
+    height: 188px;
+    width: 103px;
+  }
+  #welcome,
+  #send-me {
+    margin-top: 35px;
+  }
+
+  #welcome p {
+    line-height: 2.0;
+  }
+}
+/* @end */
+
+/* @group List Page */
+.list {
+}
+/* @end */
+/* @end */
+
+/* @group Media Queries
+=============================================================================
+Styling for a range of screen sizes.
+=============================================================================*/
+/* Up to landscape phone */
+@media (max-width: 480px) {
+  .mhide { display: none; }
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 768px) {
+}
+
+/* Portrait tablet to default desktop */
+@media (min-width: 768px) and (max-width: 980px) {
+}
+
+/* Tablets and below */
+@media (max-width: 980px) {
+}
+
+/* Large desktop and up */
+@media (min-width: 1200px) {
+}
+/* @end */
+
+/* @group Legacy Browsers
+=============================================================================
+Styling and fixes for legacy browsers.
+=============================================================================*/
+.no-cssgradient {
+  /* fix me! */
+}
+/* @end */

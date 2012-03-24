@@ -1,0 +1,13 @@
+/* TEAM */
+  Designer/Developer: David Calhoun
+  Twitter: @david_calhoun
+  Site: http://davidcalhoun.me
+  Location: Nashville, TN
+
+/* THANKS */
+  Names (& URL): 
+
+/* SITE */
+  Standards: HTML5, CSS3
+  Components: Bootstrap, Modernizr, jQuery
+  Software: 
