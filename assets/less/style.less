@@ -1,4 +1,6 @@
 @import "../bootstrap/less/bootstrap.less";
+@import "../bootstrap/less/responsive.less";
+@import "bootstrap-overrides.less";
 @import "../css/animate.css";
 @import "../css/chosen.css";
 
@@ -33,17 +35,6 @@ Tools for LESS.
   animation-timing-function: @timing-function;
   animation-fill-mode: @fill-mode;
   animation-name: @animation;
-}
-
-.transition(@transition: all 0.4s ease-in-out) {
-  -webkit-transition: @transition;
-     -moz-transition: @transition;
-}
-
-.hide-text {
-  overflow: hidden;
-  text-indent: 100%;
-  white-space: nowrap;
 }
 /* @end */
 
@@ -107,14 +98,11 @@ Styling for custom elements used throughout the site.
 .clearfix:after { clear: both; content: "."; display: block; height: 0; visibility: hidden; }
 .clearfix { display: block; }
 .selfclear { clear: both; }
-img.alignright { margin-left: 15px; }
-img.alignleft { margin-right: 15px; }
-.aligncenter { display: block; margin-left: auto; margin-right: auto; }
-.alignleft { float: left; }
-.alignright { float: right; }
-.textleft { text-align: left; }
-.textcenter { text-align: center; }
-.textright { text-align: right; }
+img.pull-right { margin-left: 15px; }
+img.pull-left { margin-right: 15px; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
 ul.horz li { display: inline-block; }
 .black { color: @black; }
 .close {
