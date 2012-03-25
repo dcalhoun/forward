@@ -46,7 +46,7 @@
       </header>
 
       <nav class="primary span4" role="navigation">
-        <?php wp_nav_menu('primary'); ?>
+        <?php wp_nav_menu(array('theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav nav-pills')); ?>
         <!-- <ul class="nav nav-pills">
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Connect <b class="caret"></b></a>
@@ -61,18 +61,16 @@
       </nav>
 
       <nav id="social" class="span4" role="navigation">
-        <ul class="unstyled horz">
-          <li>
-            <a href="http://twitter.com/forwardnash" id="twitter">Follow us on Twitter</a>
-          </li>
-          <li>
-            <a href="http://facebook.com/forwardnashville" id="facebook">Like us on Facebook</a>
-          </li>
-        </ul>
-
-        <a href="#" id="schedule">Sundays @ Murrell Elementary — 10:00am</a>
+        <?php wp_nav_menu(array('theme_location' => 'social', 'container' => false, 'menu_class' => 'unstyled horz')); ?>
+        <a href="http://g.co/maps/awqv5" id="schedule">Sundays @ Murrell Elementary &mdash; 10:00am</a>
       </nav>
     </div>
   </div>
 
+  <?php
+    // Start a container wrapper if it's not the front page.
+    $template = get_post_meta( $post->ID, '_wp_page_template', true );
+    if ($template != 'front.php') :
+  ?>
   <div class="container">
+  <?php endif; ?>

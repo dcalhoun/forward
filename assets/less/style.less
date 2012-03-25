@@ -135,6 +135,18 @@ ul.horz li { display: inline-block; }
 }
 
 /* @group Forms */
+ul.gform_fields {
+  margin-left: 0;
+  li {
+    list-style: none;
+  }
+}
+
+.gform_validation_container {
+  left: -9999px;
+  position: absolute;
+  visibility: hidden;
+}
 /* @end */
 
 /* @group Tables */
@@ -173,12 +185,12 @@ nav#social {
         text-indent: -9999px;
         width: 30px;
         .transition(opacity 0.3s ease-in-out);
-        &#facebook {
-          background-position: -39px 0;
-        }
         &:hover {
           opacity: 0.5;
         }
+      }
+      &.facebook a {
+        background-position: -39px 0;
       }
     }
   }

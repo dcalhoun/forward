@@ -7114,6 +7114,17 @@ ul.horz li {
   right: 15px;
 }
 /* @group Forms */
+ul.gform_fields {
+  margin-left: 0;
+}
+ul.gform_fields li {
+  list-style: none;
+}
+.gform_validation_container {
+  left: -9999px;
+  position: absolute;
+  visibility: hidden;
+}
 /* @end */
 /* @group Tables */
 /* @end */
@@ -7158,11 +7169,11 @@ nav#social ul li a {
   -o-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
 }
-nav#social ul li a#facebook {
-  background-position: -39px 0;
-}
 nav#social ul li a:hover {
   opacity: 0.5;
+}
+nav#social ul li.facebook a {
+  background-position: -39px 0;
 }
 section.primary {
   margin-bottom: 30px;
