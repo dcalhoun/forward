@@ -153,7 +153,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #262626;
+  color: #808080;
   text-decoration: underline;
 }
 .row {
@@ -3949,8 +3949,8 @@ input[type="submit"].btn.btn-mini {
 }
 .nav-tabs .dropdown-toggle:hover .caret,
 .nav-pills .dropdown-toggle:hover .caret {
-  border-top-color: #262626;
-  border-bottom-color: #262626;
+  border-top-color: #808080;
+  border-bottom-color: #808080;
 }
 .nav-tabs .active .dropdown-toggle .caret,
 .nav-pills .active .dropdown-toggle .caret {
@@ -7010,7 +7010,7 @@ p a:visited {
 }
 p a:hover,
 p a:active {
-  color: #262626;
+  color: #808080;
   text-decoration: none;
 }
 small {
@@ -7022,6 +7022,19 @@ h1.logo {
   height: 98px;
   text-indent: -9999px;
   width: 284px;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
+h1.logo:hover {
+  opacity: 0.5;
 }
 h1.logo a {
   display: block;
@@ -7074,6 +7087,32 @@ ul.horz li {
 .close {
   font-family: Pictos;
 }
+.wrapper-carousel:hover .control {
+  visibility: visible;
+}
+.control {
+  background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
+  display: block;
+  height: 57px;
+  position: absolute;
+  top: 36%;
+  width: 57px;
+  visibility: hidden;
+  z-index: 2;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+.control.prev {
+  left: 15px;
+}
+.control.next {
+  background-position: -58px 0;
+  right: 15px;
+}
 /* @group Forms */
 /* @end */
 /* @group Tables */
@@ -7089,7 +7128,7 @@ header.primary {
   padding: 20px 0;
 }
 nav.primary {
-  margin-top: 60px;
+  margin-top: 51px;
 }
 nav#social {
   margin-top: 30px;
@@ -7137,7 +7176,7 @@ footer.primary {
 Styling for page-specific elements.
 =============================================================================*/
 /* @group Front Page */
-.front #wrapper-mission {
+#wrapper-mission {
   background: #eeeeee;
   margin-bottom: 50px;
   padding: 15px 0;
@@ -7152,67 +7191,75 @@ Styling for page-specific elements.
   -o-transition: background-color 0.4s ease-in-out;
   transition: background-color 0.4s ease-in-out;
 }
-.front #wrapper-mission:hover {
+#wrapper-mission:hover {
   background: #dcdcdc;
 }
-.front #wrapper-mission.closed {
+#wrapper-mission.closed {
   cursor: pointer;
 }
-.front #wrapper-mission.open section#mission {
+#wrapper-mission.open section#mission {
   color: #333333;
 }
-.front #wrapper-mission.open:hover {
+#wrapper-mission.open:hover {
   background: #eeeeee;
 }
-.front #wrapper-mission section#mission {
+#wrapper-mission section#mission {
   height: 35px;
   position: relative;
   overflow: hidden;
 }
-.front #wrapper-mission section#mission p {
+#wrapper-mission section#mission p {
   font: 100 italic 20px/2 Georgia, Times, serif;
+  margin-bottom: 0;
 }
-.front #close-mission {
+#close-mission {
   display: none;
+  font-size: 30px;
   position: absolute;
-  right: 40px;
-  top: 160px;
+  right: 16px;
+  top: 150px;
 }
-.front .wrapper-slider {
+.wrapper-carousel {
   overflow: hidden;
   margin: 0 0 50px 0;
   position: relative;
   width: 100%;
 }
-.front .wrapper-slider .slider {
+.wrapper-carousel .carousel {
   width: 2000px;
 }
-.front .wrapper-slider .slider img {
+.wrapper-carousel .carousel img {
   cursor: pointer;
   float: left;
   margin: 0 1px;
 }
-.front #send-me,
-.front #two-forty-two {
+#send-me,
+#two-forty-two {
   display: block;
   margin: 0 auto;
   text-indent: -9999px;
 }
-.front #send-me {
+#send-me {
   background: url('../images/logo-send-me.png') no-repeat 0 0;
   height: 86px;
   width: 160px;
 }
-.front #two-forty-two {
+#send-me:hover {
+  background-position: 0 -87px;
+}
+#two-forty-two {
   background: url('../images/logo-242.png') no-repeat 0 0;
   height: 188px;
-  width: 103px;
+  width: 101px;
 }
-.front #welcome,
-.front #send-me {
+#two-forty-two:hover {
+  background-position: 0 -191px;
+}
+#welcome,
+#send-me {
   margin-top: 35px;
 }
-.front #welcome p {
+#welcome p {
   line-height: 2.0;
 }
 /* @end */

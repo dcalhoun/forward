@@ -74,6 +74,10 @@ h1 {
     height: 98px;
     text-indent: -9999px;
     width: 284px;
+    .transition(opacity 0.3s ease-in-out);
+  &:hover {
+    opacity: 0.5;
+  }
     a {
       display: block;
       height: 100%;
@@ -108,6 +112,27 @@ ul.horz li { display: inline-block; }
 .close {
   font-family: Pictos;
 }
+.wrapper-carousel:hover .control {
+  visibility: visible;
+}
+.control {
+  background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
+  display: block;
+  height: 57px;
+  position: absolute;
+  top: 36%;
+  width: 57px;
+  visibility: hidden;
+  z-index: 2;
+  .hide-text();
+  &.prev {
+    left: 15px;
+  }
+  &.next {
+    background-position: -58px 0;
+    right: 15px;
+  }
+}
 
 /* @group Forms */
 /* @end */
@@ -130,7 +155,7 @@ header.primary {
 }
 
 nav.primary {
-  margin-top: 60px;
+  margin-top: 51px;
 }
 
 nav#social {
@@ -176,82 +201,88 @@ footer.primary {
 Styling for page-specific elements.
 =============================================================================*/
 /* @group Front Page */
-.front {
-  #wrapper-mission {
-    background: @grayLighter;
-    margin-bottom: 50px;
-    padding: 15px 0;
-    .transition(background-color 0.4s ease-in-out);
-    &:hover {
-      background: darken(@grayLighter, 7%);
-    }
-    &.closed {
-      cursor: pointer;
-    }
-    &.open {
-      section#mission {
-        color: @grayDark;
-      }
-      &:hover {
-        background: @grayLighter;
-      }
-    }
+#wrapper-mission {
+  background: @grayLighter;
+  margin-bottom: 50px;
+  padding: 15px 0;
+  .transition(background-color 0.4s ease-in-out);
+  &:hover {
+    background: darken(@grayLighter, 7%);
+  }
+  &.closed {
+    cursor: pointer;
+  }
+  &.open {
     section#mission {
-      height: 35px;
-      position: relative;
-      overflow: hidden;
-      p {
-        font: 100 italic 20px/2.0 Georgia, Times, serif;
-      }
+      color: @grayDark;
+    }
+    &:hover {
+      background: @grayLighter;
     }
   }
-
-  #close-mission {
-    display: none;
-    position: absolute;
-    right: 40px;
-    top: 160px;
-  }
-
-  .wrapper-slider {
-    overflow: hidden;
-    margin: 0 0 50px 0;
+  section#mission {
+    height: 35px;
     position: relative;
-    width: 100%;
-    .slider {
-      width: 2000px;
-      img {
-        cursor: pointer;
-        float: left;
-        margin: 0 1px;
-      }
+    overflow: hidden;
+    p {
+      font: 100 italic 20px/2.0 Georgia, Times, serif;
+      margin-bottom: 0;
     }
   }
+}
 
-  #send-me,
-  #two-forty-two {
-    display: block;
-    margin: 0 auto;
-    text-indent: -9999px;
-  }
-  #send-me {
-    background: url('../images/logo-send-me.png') no-repeat 0 0;
-    height: 86px;
-    width: 160px;
-  }
-  #two-forty-two {
-    background: url('../images/logo-242.png') no-repeat 0 0;
-    height: 188px;
-    width: 103px;
-  }
-  #welcome,
-  #send-me {
-    margin-top: 35px;
-  }
+#close-mission {
+  display: none;
+  font-size: 30px;
+  position: absolute;
+  right: 16px;
+  top: 150px;
+}
 
-  #welcome p {
-    line-height: 2.0;
+.wrapper-carousel {
+  overflow: hidden;
+  margin: 0 0 50px 0;
+  position: relative;
+  width: 100%;
+  .carousel {
+    width: 2000px;
+    img {
+      cursor: pointer;
+      float: left;
+      margin: 0 1px;
+    }
   }
+}
+
+#send-me,
+#two-forty-two {
+  display: block;
+  margin: 0 auto;
+  text-indent: -9999px;
+}
+#send-me {
+  background: url('../images/logo-send-me.png') no-repeat 0 0;
+  height: 86px;
+  width: 160px;
+  &:hover {
+    background-position: 0 -87px;
+  }
+}
+#two-forty-two {
+  background: url('../images/logo-242.png') no-repeat 0 0;
+  height: 188px;
+  width: 101px;
+  &:hover {
+    background-position: 0 -191px;
+  }
+}
+#welcome,
+#send-me {
+  margin-top: 35px;
+}
+
+#welcome p {
+  line-height: 2.0;
 }
 /* @end */
 

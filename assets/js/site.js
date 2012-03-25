@@ -10,8 +10,8 @@
     $('#wrapper-mission').click(event, openMission);
     $('#close-mission').click(event, closeMission);
     $('#featured-slides img').click(goToURL);
-    return $('.slider').carouFredSel({
-      auto: true,
+    return $('.carousel').carouFredSel({
+      auto: false,
       align: 'center',
       circular: true,
       items: {
@@ -22,11 +22,11 @@
         width: 400
       },
       next: {
-        button: '.controll.right',
+        button: '.next',
         key: 'right'
       },
       prev: {
-        button: '.controll.left',
+        button: '.prev',
         key: 'left'
       },
       responsive: true,
