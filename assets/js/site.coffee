@@ -5,7 +5,7 @@ $ ->
   $('.dropdown-toggle').dropdown()
   $('#wrapper-mission').click event, openMission
   $('#close-mission').click event, closeMission
-  $('#featured-slides img').click goToURL
+  # $('#featured-slides img').click goToURL
 
   $('.carousel').carouFredSel
     auto          : false,
