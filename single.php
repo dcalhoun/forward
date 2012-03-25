@@ -6,9 +6,8 @@
  * @subpackage Forward_Church
  * @since Forward Church 1.0
  */
-?>
 
-<?php include('header.php'); ?>
+get_header(); ?>
 
   <div class="row">
     <section class="primary span8 offset2" role="main">
@@ -33,4 +32,4 @@
     </section>
   </div> <!-- /.row -->
 
-<?php include('footer.php'); ?>
+<?php get_footer(); ?>

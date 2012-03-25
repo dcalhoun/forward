@@ -12,7 +12,7 @@ $ ->
     align         : 'center',
     circular      : true,
     items:
-      # height      : 267,
+      height      : 267,
       visible:
         min       : 1,
         max       : 3

@@ -7230,6 +7230,9 @@ Styling for page-specific elements.
   right: 16px;
   top: 150px;
 }
+.admin-bar #close-mission {
+  top: 178px;
+}
 .wrapper-carousel {
   overflow: hidden;
   margin: 0 0 50px 0;
@@ -7283,9 +7286,7 @@ Styling for a range of screen sizes.
 =============================================================================*/
 /* Up to landscape phone */
 @media (max-width: 480px) {
-  .mhide {
-    display: none;
-  }
+  
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {

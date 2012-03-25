@@ -33,21 +33,15 @@ if (function_exists('register_sidebar')) {
 add_action( 'after_setup_theme', 'bootstrap_setup' );
 
 if ( ! function_exists( 'bootstrap_setup' ) ):
-
   function bootstrap_setup(){
-
     class Bootstrap_Walker_Nav_Menu extends Walker_Nav_Menu {
 
-
       function start_lvl( &$output, $depth ) {
-
         $indent = str_repeat( "\t", $depth );
         $output    .= "\n$indent<ul class=\"dropdown-menu\">\n";
-
       }
 
       function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
-
         $indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 
         $li_attributes = '';
@@ -57,7 +51,6 @@ if ( ! function_exists( 'bootstrap_setup' ) ):
         $classes[] = ($args->has_children) ? 'dropdown' : '';
         $classes[] = ($item->current || $item->current_item_ancestor) ? 'active' : '';
         $classes[] = 'menu-item-' . $item->ID;
-
 
         $class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
         $class_names = ' class="' . esc_attr( $class_names ) . '"';
@@ -83,10 +76,8 @@ if ( ! function_exists( 'bootstrap_setup' ) ):
       }
 
       function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, &$output ) {
-
         if ( !$element )
           return;
-
         $id_field = $this->db_fields['id'];
 
         //display this element

@@ -46,18 +46,16 @@
       </header>
 
       <nav class="primary span4" role="navigation">
-        <?php wp_nav_menu(array('theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav nav-pills')); ?>
-        <!-- <ul class="nav nav-pills">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Connect <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="interior.html">242</a></li>
-              <li><a href="with-sidebar.html">SendMe</a></li>
-              <li><a href="#">Directions</a></li>
-            </ul>
-          </li>
-          <li><a href="#">News</a></li> -->
-        </ul>
+        <?php
+          $args = array(
+            'container'      => false,
+            'depth'          => 2,
+            'menu_class'     => 'nav nav-pills',
+            'theme_location' => 'primary',
+            'walker'         => new Bootstrap_Walker_Nav_Menu()
+          );
+          wp_nav_menu($args);
+        ?>
       </nav>
 
       <nav id="social" class="span4" role="navigation">
@@ -68,9 +66,9 @@
   </div>
 
   <?php
-    // Start a container wrapper if it's not the front page.
+    // Start a container wrapper if it's not using the front page template.
     $template = get_post_meta( $post->ID, '_wp_page_template', true );
-    if ($template != 'front.php') :
+    if ($template != 'front.php') {
+      echo '<div class="container">';
+    }
   ?>
-  <div class="container">
-  <?php endif; ?>
