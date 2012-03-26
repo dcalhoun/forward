@@ -24,9 +24,9 @@ get_header(); ?>
   <div class="wrapper-carousel">
     <?php
       $args = array(
-        'category_name=slides'
+        'category_name=featured'
       );
-      $slides = new WP_Query('category_name=slides');
+      $slides = new WP_Query($args);
     ?>
     <?php if ($slides->have_posts()) : ?>
     <a href="#" class="control prev">Prev</a>
@@ -37,7 +37,7 @@ get_header(); ?>
     </div>
     <a href="#" class="control next">Next</a>
     <?php else :?>
-      <p class="empty-text">No posts to display.</p>
+      <p class="empty-text">No slides to display</p>
     <?php endif; ?>
   </div>
 

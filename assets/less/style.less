@@ -75,14 +75,18 @@ h1 {
     text-indent: -9999px;
     width: 284px;
     .transition(opacity 0.3s ease-in-out);
-  &:hover {
-    opacity: 0.5;
-  }
+    &:hover {
+      opacity: 0.5;
+    }
     a {
       display: block;
       height: 100%;
       width: 100%;
     }
+  }
+  &.entry-title {
+    margin-bottom: 15px;
+    text-align: center;
   }
 }
 h2 {
@@ -134,6 +138,14 @@ ul.horz li { display: inline-block; }
   }
 }
 
+.empty-text {
+  color: lighten(@grayLight, 20%);
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 /* @group Forms */
 ul.gform_fields {
   margin-left: 0;
@@ -168,6 +180,11 @@ header.primary {
 
 nav.primary {
   margin-top: 51px;
+}
+
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover {
+  background: @grayLight;
 }
 
 nav#social {
