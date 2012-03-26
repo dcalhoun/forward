@@ -10474,7 +10474,7 @@ ul.horz li {
 .black {
   color: #000000;
 }
-.close {
+.pictos {
   font-family: Pictos;
 }
 .wrapper-carousel:hover .control {
@@ -10524,6 +10524,15 @@ ul.gform_fields li {
   left: -9999px;
   position: absolute;
   visibility: hidden;
+}
+.gform_body input[type=text],
+.gform_body input[type=email],
+.gform_body input[type=tel],
+.gform_body textarea {
+  width: 75%;
+}
+.gform_body .validation_message.help-inline {
+  display: none;
 }
 /* @end */
 /* @group Tables */

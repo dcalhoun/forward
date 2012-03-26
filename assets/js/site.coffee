@@ -3,6 +3,7 @@ mission_condensed = '<span class="black">This is no Sunday kind of church.</span
 
 $ ->
   $('.dropdown-toggle').dropdown()
+  $('.alert').alert()
   $('#wrapper-mission').click event, openMission
   $('#close-mission').click event, closeMission
   # $('#featured-slides img').click goToURL
@@ -12,7 +13,6 @@ $ ->
     align         : 'center',
     circular      : true,
     items:
-      height      : 267,
       visible:
         min       : 1,
         max       : 3

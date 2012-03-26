@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Front
+ * Template Name: Home Page
  *
  * @package WordPress
  * @subpackage Forward_Church
@@ -9,7 +9,7 @@
 
 get_header(); ?>
 
-  <a href="#" id="close-mission" class="close alignright mhide">D</a>
+  <a href="#" id="close-mission" class="pictos alignright mhide">D</a>
 
   <div id="wrapper-mission" class="closed hidden-phone">
     <div class="container">
@@ -24,7 +24,8 @@ get_header(); ?>
   <div class="wrapper-carousel">
     <?php
       $args = array(
-        'category_name=featured'
+        'category_name'  => 'featured',
+        'posts_per_page' => -1
       );
       $slides = new WP_Query($args);
     ?>

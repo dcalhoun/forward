@@ -113,7 +113,7 @@ img.pull-left { margin-right: 15px; }
 .text-right { text-align: right; }
 ul.horz li { display: inline-block; }
 .black { color: @black; }
-.close {
+.pictos {
   font-family: Pictos;
 }
 .wrapper-carousel:hover .control {
@@ -158,6 +158,18 @@ ul.gform_fields {
   left: -9999px;
   position: absolute;
   visibility: hidden;
+}
+
+.gform_body {
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  textarea {
+    width: 75%;
+  }
+  .validation_message.help-inline {
+    display: none;
+  }
 }
 /* @end */
 

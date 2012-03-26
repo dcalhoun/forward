@@ -20,7 +20,9 @@
   <script>window.jQuery || document.write('<script src="assets/js/jquery-1.7.1.min.js"><\/script>')</script>
   <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/js/jquery.touchwipe.min.js"></script>
   <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/js/jquery.carouFredSel-5.5.0-packed.js"></script>
+  <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/bootstrap/js/bootstrap-transition.js"></script>
   <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/bootstrap/js/bootstrap-dropdown.js"></script>
+  <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/bootstrap/js/bootstrap-alert.js"></script>
   <script type="text/javascript" src="<?php bloginfo('template_directory'); ?>/assets/js/site.js"></script>
 
   <?php wp_footer(); ?>

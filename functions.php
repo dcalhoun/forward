@@ -7,6 +7,7 @@
  * @since Forward Church 1.0
  */
 
+// Register navigation menus
 if (function_exists('register_nav_menus')) {
   register_nav_menus(
     array(
@@ -16,20 +17,25 @@ if (function_exists('register_nav_menus')) {
   );
 }
 
-if ( function_exists( 'add_theme_support' ) ) {
-  add_theme_support( 'post-thumbnails' );
+// Enable post thumbnail images
+if (function_exists('add_theme_support')) {
+  add_theme_support('post-thumbnails');
 }
 
+// Register widgitized areas
 if (function_exists('register_sidebar')) {
   register_sidebar(array(
-      'before_widget' => '',
-      'after_widget' => '',
-      'before_title' => '<div class="title">',
-      'after_title' => '</div>'
+      'name'          => 'Sidebar 1',
+      'id'            => 'sidebar-1',
+      'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+      'after_widget'  => "</aside>",
+      'before_title'  => '<h3 class="widget-title">',
+      'after_title'   => '</h3>'
     )
   );
 }
 
+// Format navigation for Bootstrap dropdowns
 add_action( 'after_setup_theme', 'bootstrap_setup' );
 
 if ( ! function_exists( 'bootstrap_setup' ) ):

@@ -6,12 +6,11 @@
  * @subpackage Forward_Church
  * @since Forward Church 1.0
  */
-?>
 
-<?php include('header.php'); ?>
+get_header(); ?>
 
   <div class="row">
-    <section class="primary span8 offset2" role="main">
+    <section class="primary span8" role="main">
 
       <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
       <article id="post-<?php the_ID(); ?>">
@@ -26,7 +25,14 @@
       <hr>
       <?php endwhile; endif; ?>
 
+      <?php //echo paginate_links() ?>
+      <?php //echo next_post_link(); ?>
+      <?php //echo previous_post_link(); ?>
+
     </section>
+
+    <?php get_sidebar(); ?>
+
   </div> <!-- /.row -->
 
-<?php include('footer.php'); ?>
+<?php get_footer(); ?>

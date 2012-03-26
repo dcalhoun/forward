@@ -7,6 +7,7 @@
 
   $(function() {
     $('.dropdown-toggle').dropdown();
+    $('.alert').alert();
     $('#wrapper-mission').click(event, openMission);
     $('#close-mission').click(event, closeMission);
     return $('.carousel').carouFredSel({
@@ -14,7 +15,6 @@
       align: 'center',
       circular: true,
       items: {
-        height: 267,
         visible: {
           min: 1,
           max: 3
