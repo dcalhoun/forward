@@ -10487,7 +10487,7 @@ ul.horz li {
 .pictos {
   font-family: Pictos;
 }
-.wrapper-carousel:hover .control {
+.no-touch .wrapper-carousel:hover .control {
   opacity: 1.0;
 }
 .control {
