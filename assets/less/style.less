@@ -45,7 +45,7 @@ Styling for default HTML elements.
 body {
   color: @grayLight;
   font-size: 62.5%;
-  font: normal 14px/1.5 Helvetica, Arial, sans-serif;
+  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   .animate();
 }
@@ -55,7 +55,7 @@ a:hover, a:active {
   text-decoration: none;
 }
 p {
-  font: normal 14px/1.5 Helvetica, Arial, sans-serif;
+  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
   a, a:visited {
     color: @linkColor;
     font-weight: bold;
@@ -68,6 +68,7 @@ p {
 }
 small { font-size: 80%; }
 h1 {
+/*  font-family: 'EB Garamond', Georgia, Times, serif;*/
   &.logo {
     background: url('../images/logo-forward.png') no-repeat 0 0;
     display: block;
@@ -93,6 +94,11 @@ h2 {
 }
 h3 {
 }
+h1, h2, h3, h4 {
+  > a {
+    color: @grayLight;
+  }
+}
 /*::selection {
 }
 ::-moz-selection {
@@ -117,17 +123,18 @@ ul.horz li { display: inline-block; }
   font-family: Pictos;
 }
 .wrapper-carousel:hover .control {
-  visibility: visible;
+  opacity: 1.0;
 }
 .control {
   background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
   display: block;
   height: 57px;
+  opacity: 0;
   position: absolute;
   top: 36%;
   width: 57px;
-  visibility: hidden;
   z-index: 2;
+  .transition(opacity 0.4s ease-in-out);
   .hide-text();
   &.prev {
     left: 15px;
@@ -177,6 +184,10 @@ ul.gform_fields {
 /* @end */
 
 /* @group Buttons */
+.gform_button {
+  .btn();
+  .btn-primary();
+}
 /* @end */
 /* @end */
 
@@ -223,10 +234,31 @@ nav#social {
       }
     }
   }
+  #schedule {
+    display: block;
+    margin-bottom: 15px;
+  }
 }
 
 section.primary {
   margin-bottom: 30px;
+}
+
+.post {
+  border-bottom: 1px solid @grayLighter;
+  margin-bottom: 60px;
+  padding-bottom: 60px;
+  p {
+    text-align: justify;
+  }
+  .attachment-feature {
+    margin-left: -32%;
+    margin-bottom: 40px;
+  }
+}
+
+.pagination ol {
+  display: inline-block;
 }
 
 aside.primary {
@@ -277,10 +309,10 @@ Styling for page-specific elements.
   font-size: 30px;
   position: absolute;
   right: 16px;
-  top: 150px;
+  top: 137px;
 }
 .admin-bar #close-mission {
-  top: 178px;
+  top: 165px;
 }
 
 .wrapper-carousel {
@@ -292,9 +324,14 @@ Styling for page-specific elements.
     width: 2000px;
     img {
       cursor: pointer;
+      display: block;
       float: left;
       margin: 0 1px;
     }
+  }
+  .empty-text {
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
 }
 
@@ -302,7 +339,7 @@ Styling for page-specific elements.
 #two-forty-two {
   display: block;
   margin: 0 auto;
-  text-indent: -9999px;
+  .hide-text();
 }
 #send-me {
   background: url('../images/logo-send-me.png') no-repeat 0 0;
@@ -346,6 +383,53 @@ Styling for a range of screen sizes.
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
+  body {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  nav.primary {
+    > ul {
+      text-align: center;
+      > li {
+        display: inline-block;
+        float: none;
+      }
+    }
+    ul.dropdown-menu {
+      text-align: left;
+    }
+  }
+
+  nav#social {
+    text-align: center;
+  }
+
+  .wrapper-carousel {
+    margin-bottom: 0px;
+  }
+
+  section.primary {
+    margin-bottom: 0;
+    > [class*="span"] {
+      .clearfix();
+    }
+  }
+
+  #welcome {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  #send-me,
+  #two-forty-two {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
 }
 
 /* Portrait tablet to default desktop */
@@ -358,6 +442,11 @@ Styling for a range of screen sizes.
 
 /* Large desktop and up */
 @media (min-width: 1200px) {
+  .post {
+    .attachment-feature {
+      margin-left: -20%;
+    }
+  }
 }
 /* @end */
 

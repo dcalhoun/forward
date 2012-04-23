@@ -10,11 +10,13 @@
     $('.alert').alert();
     $('#wrapper-mission').click(event, openMission);
     $('#close-mission').click(event, closeMission);
+    $('#featured-slides img').click(goToURL);
     return $('.carousel').carouFredSel({
       auto: false,
       align: 'center',
       circular: true,
       items: {
+        minimum: 1,
         visible: {
           min: 1,
           max: 3

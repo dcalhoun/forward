@@ -7,6 +7,14 @@
  * @since Forward Church 1.0
  */
 
+// Custom function to spit out images
+function add_images($images, $count) {
+  // Make sure we have at least 3 images for carousel
+  for ($i=0; $i < $count; $i++) {
+    echo $images[$i];
+  }
+}
+
 // Register navigation menus
 if (function_exists('register_nav_menus')) {
   register_nav_menus(
@@ -20,6 +28,12 @@ if (function_exists('register_nav_menus')) {
 // Enable post thumbnail images
 if (function_exists('add_theme_support')) {
   add_theme_support('post-thumbnails');
+}
+
+// Create thumbnail image size
+if (function_exists('add_image_size')) {
+  add_image_size('slide', 400, 267, true);
+  add_image_size('feature', 800, 9999, true);
 }
 
 // Register widgitized areas

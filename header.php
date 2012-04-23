@@ -30,6 +30,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <!-- ### Stylesheets ### -->
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="<?php bloginfo('template_directory'); ?>/assets/css/fonts.css" type="text/css" media="screen">
   <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
 

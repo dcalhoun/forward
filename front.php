@@ -9,13 +9,33 @@
 
 get_header(); ?>
 
+<?php
+
+  // Extra images for home page carousel
+  $args = array(
+    'post_parent'    => $post->ID,
+    'post_status'    => 'inherit',
+    'post_type'      => 'attachment',
+    'post_mime_type' => 'image',
+    'order'          => 'ASC',
+    'orderby'        => 'menu_order ID'
+  );
+
+  $attachments = get_children($args);
+  $extra_images = array();
+
+  foreach($attachments as $att_id => $attachment) {
+    array_push($extra_images, wp_get_attachment_image($attachment->ID, 'slide'));
+  }
+?>
+
   <a href="#" id="close-mission" class="pictos alignright mhide">D</a>
 
   <div id="wrapper-mission" class="closed hidden-phone">
     <div class="container">
       <section id="mission" class="row">
         <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-        <p class="span12"><?php echo get_post_meta($post->ID, 'mission', true); ?></p>
+          <p class="span12"><?php echo get_post_meta($post->ID, 'mission', true); ?></p>
         <?php endwhile; endif; ?>
       </section>
     </div>
@@ -28,18 +48,27 @@ get_header(); ?>
         'posts_per_page' => -1
       );
       $slides = new WP_Query($args);
+      $slide_count = $slides->post_count;
+      $needed_images = 3 - $slide_count;
     ?>
-    <?php if ($slides->have_posts()) : ?>
+
     <a href="#" class="control prev">Prev</a>
     <div id="featured-slides" class="carousel">
-      <?php while ($slides->have_posts()) : $slides->the_post(); ?>
-        <?php the_post_thumbnail(array(267,400)); ?>
-      <?php endwhile; ?>
+      <?php if ($slides->have_posts()) : ?>
+        <?php while ($slides->have_posts()) : $slides->the_post(); ?>
+          <?php
+            $url = get_permalink();
+            the_post_thumbnail('slide', array('data-url' => $url));
+          ?>
+        <?php endwhile; ?>
+
+        <?php add_images($extra_images, $needed_images); ?>
+      <?php else :?>
+        <?php add_images($extra_images, $needed_images); ?>
+        <!-- <p class="empty-text">No slides to display</p> -->
+      <?php endif; ?>
     </div>
     <a href="#" class="control next">Next</a>
-    <?php else :?>
-      <p class="empty-text">No slides to display</p>
-    <?php endif; ?>
   </div>
 
   <div class="container">
