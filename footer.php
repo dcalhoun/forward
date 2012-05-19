@@ -8,7 +8,7 @@
  */
 ?>
 
-    <footer class="primary row" role="contentInfo">
+    <footer class="primary row">
       <div class="span12">
         <p class="text-center">&copy; <?php the_date('Y'); ?> Forward Church Nashville. All Rights Reserved.</p>
       </div>

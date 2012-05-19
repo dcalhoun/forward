@@ -40,20 +40,20 @@
 </head>
 
 <body <?php body_class(); ?>>
-  <div class="container">
+  <div id="wrapper-header" class="container">
     <div class="row">
-      <header class="primary span4" role="banner">
+      <header class="primary span4">
         <h1 class="logo">
           <a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
         </h1>
       </header>
 
-      <nav class="primary span4" role="navigation">
+      <nav class="primary span4">
         <?php
           $args = array(
             'container'      => false,
             'depth'          => 2,
-            'menu_class'     => 'nav nav-pills',
+            'menu_class'     => 'nav nav-pills hidden-phone',
             'theme_location' => 'primary',
             'walker'         => new Bootstrap_Walker_Nav_Menu()
           );
@@ -61,9 +61,12 @@
         ?>
       </nav>
 
-      <nav id="social" class="span4" role="navigation">
+      <nav id="social" class="span4">
         <?php wp_nav_menu(array('theme_location' => 'social', 'container' => false, 'menu_class' => 'unstyled horz')); ?>
-        <a href="http://g.co/maps/awqv5" id="schedule">Sundays @ Murrell Elementary &mdash; 10:00am</a>
+      </nav>
+
+      <nav id="nav-mobile" class="span12">
+        <?php wp_nav_menu(array('theme_location' => 'mobile', 'container' => false, 'menu_class' => 'unstyled horz visible-phone')); ?>
       </nav>
     </div>
   </div>

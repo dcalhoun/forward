@@ -1,6 +1,4 @@
 @import "../bootstrap/less/bootstrap.less";
-@import "../bootstrap/less/responsive.less";
-@import "bootstrap-overrides.less";
 @import "../css/animate.css";
 @import "../css/chosen.css";
 
@@ -234,9 +232,15 @@ nav#social {
       }
     }
   }
-  #schedule {
+  .schedule {
     display: block;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    a {
+      background: none;
+      text-align: right;
+      text-indent: 0;
+      width: auto;
+    }
   }
 }
 
@@ -293,14 +297,15 @@ Styling for page-specific elements.
       background: @grayLighter;
     }
   }
-  section#mission {
-    height: 35px;
-    position: relative;
-    overflow: hidden;
-    p {
-      font: 100 italic 20px/2.0 Georgia, Times, serif;
-      margin-bottom: 0;
-    }
+}
+
+section#mission {
+  height: 35px;
+  position: relative;
+  overflow: hidden;
+  p {
+    font: 100 italic 20px/2.0 Georgia, Times, serif;
+    margin-bottom: 0;
   }
 }
 
@@ -379,21 +384,48 @@ Styling for a range of screen sizes.
 =============================================================================*/
 /* Up to landscape phone */
 @media (max-width: 480px) {
+
+
+  h1.logo {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .nav-pills {
+    background: @grayLighter;
+    > li {
+      width: 50%;
+      > a {
+        font-size: 20px;
+        padding: 20px 0;
+        width: 100%;
+        .border-radius(0);
+      }
+    }
+  }
+
+  .dropdown-menu {
+    a {
+      font-size: 16px;
+      padding: 8px 15px;
+    }
+  }
+
+  nav#social {
+    text-align: center;
+  }
+
 }
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
-  body {
-    padding-right: 0;
-    padding-left: 0;
+  h1.logo {
+    background-size: 225px 75px;
+    height: 75px;
+    width: 225px;
   }
 
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  nav.primary {
+/*  nav.primary {
     > ul {
       text-align: center;
       > li {
@@ -404,10 +436,15 @@ Styling for a range of screen sizes.
     ul.dropdown-menu {
       text-align: left;
     }
-  }
+  }*/
 
   nav#social {
-    text-align: center;
+    .schedule {
+      a {
+        font-size: 12px;
+        text-align: center;
+      }
+    }
   }
 
   .wrapper-carousel {
@@ -418,6 +455,16 @@ Styling for a range of screen sizes.
     margin-bottom: 0;
     > [class*="span"] {
       .clearfix();
+    }
+  }
+
+  #wrapper-mission {
+    padding: 10px 0;
+  }
+
+  section#mission {
+    p {
+      font-size: 16px;
     }
   }
 
@@ -438,6 +485,16 @@ Styling for a range of screen sizes.
 
 /* Tablets and below */
 @media (max-width: 980px) {
+  body,
+  #wrapper-header {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 /* Large desktop and up */

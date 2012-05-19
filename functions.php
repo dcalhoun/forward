@@ -20,7 +20,8 @@ if (function_exists('register_nav_menus')) {
   register_nav_menus(
     array(
       'primary' => 'Primary Navigation',
-      'social' => 'Social Navigation'
+      'social' => 'Social Navigation',
+      'mobile' => 'Mobile Navigation'
     )
   );
 }
