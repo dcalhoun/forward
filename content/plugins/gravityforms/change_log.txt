@@ -1,4 +1,23 @@
 -------------------------------------------------------------------------------------------------------------------
+Version 1.6.4.4.2
+    - Fixed issue with default post category not being properly set
+    - updated "GFCommon::is_post_field()" to be a public method (for use in User Registration Add-on)
+
+-------------------------------------------------------------------------------------------------------------------
+Version 1.6.4.4.1
+    - Fixed issue with number field failing validation when field was configured with commas for decimal separators
+    - Fixed issue with calculation not supporting the field number format setting
+
+-------------------------------------------------------------------------------------------------------------------
+Version 1.6.4.4
+    - Fixed issue with get_product_fields() function caching product fields for pre-submission entries (ones without an ID)
+    - Fixed issue with credit card field not updating card type as the card number is entered
+    - Fixed issue with init scripts being executed more than once
+    - Fixed issue with gf_global not being output on certain situations
+    - Fixed issue with post not being associated with entries
+    - Fixed some notice messages
+
+-------------------------------------------------------------------------------------------------------------------
 Version 1.6.4.3
     - Fixed issue with notification url not accepting port number and cleaned up trailing slash and question mark when not necessary
     - Fixed issue with shipping being displayed even when shipping is hidden by conditional logic

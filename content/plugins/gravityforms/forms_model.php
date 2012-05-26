@@ -364,7 +364,7 @@ class RGFormsModel{
         $lead_table = self::get_lead_table_name();
 
         $payment_date = strtotime(rgar($lead,"payment_date")) ? "'{$lead["payment_date"]}'" : "NULL";
-        $payment_amount = !rgblank("payment_amount", $lead) ? $lead["payment_amount"] : "NULL";
+        $payment_amount = !rgblank(rgar($lead, "payment_amount")) ? rgar($lead, "payment_amount") : "NULL";
         $transaction_type = !rgempty("transaction_type", $lead) ? $lead["transaction_type"] : "NULL";
         $status = !rgempty("status", $lead) ? $lead["status"] : "active";
 
@@ -384,7 +384,7 @@ class RGFormsModel{
                                     is_fulfilled=%d,
                                     transaction_type={$transaction_type},
                                     status='{$status}'
-                                WHERE id=%d",   rgar($lead,"form_id"), rgar($lead,"post_id"), rgar($lead,"is_starred"), rgar($lead,"is_read"), rgar($lead,"ip"), rgar($lead,"source_url"), rgar($lead,"user_agent"),
+                               WHERE id=%d",   rgar($lead,"form_id"), rgar($lead,"post_id"), rgar($lead,"is_starred"), rgar($lead,"is_read"), rgar($lead,"ip"), rgar($lead,"source_url"), rgar($lead,"user_agent"),
                                                 rgar($lead,"currency"), rgar($lead,"payment_status"), rgar($lead,"transaction_id"), rgar($lead,"is_fulfilled"), rgar($lead,"id"));
         $wpdb->query($sql);
     }
@@ -1258,12 +1258,6 @@ class RGFormsModel{
                 $value = self::create_list_array($field, $value);
             break;
 
-            case "number":
-                $value = self::get_input_value($field, "input_" . $field["id"], rgar($field, "inputName"), $field_values, $get_from_post);
-                if(GFCommon::is_numeric($value, rgar($field, 'numberFormat')))
-                    $value = GFCommon::clean_number($value, rgar($field, 'numberFormat'));
-            break;
-
             default:
 
                 if(isset($field["inputs"]) && is_array($field["inputs"])){
@@ -1428,7 +1422,7 @@ class RGFormsModel{
         }
 
         $post_data["post_status"] = rgar($form, "postStatus");
-        $post_data["post_category"] = !empty($categories) ? $categories : array(rgar($field, 'postCategory'));
+        $post_data["post_category"] = !empty($categories) ? $categories : array(rgar($form, 'postCategory'));
         $post_data["images"] = $images;
 
         //setting current user as author depending on settings
@@ -2314,6 +2308,9 @@ class RGFormsModel{
             break;
             case "date" :
                 $value = self::prepare_date(rgar($field, "dateFormat"), $value);
+            break;
+            case "number" :
+                $value = GFCommon::clean_number($value, rgar($field, 'numberFormat'));
             break;
          }
 

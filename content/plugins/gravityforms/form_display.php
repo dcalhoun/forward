@@ -603,9 +603,18 @@ class GFFormDisplay{
 
             $is_first_load = !$is_postback;
 
-            if(!$ajax || $is_first_load) {
-                $form_string .= self::get_form_init_scripts($form);
-                $form_string .= "<script type='text/javascript'>" . apply_filters("gform_cdata_open", "") . " jQuery(document).ready(function(){jQuery(document).trigger('gform_post_render', [{$form_id}, {$current_page}])}); " . apply_filters("gform_cdata_close", "") . "</script>";
+            if((!$ajax || $is_first_load)) {
+
+                self::register_form_init_scripts($form);
+
+                if(apply_filters("gform_init_scripts_footer", false)){
+                    add_action("wp_footer",            create_function('', 'GFFormDisplay::footer_init_scripts(' . $form['id'] . ');'), 20);
+                    add_action("gform_preview_footer", create_function('', 'GFFormDisplay::footer_init_scripts(' . $form['id'] . ');'));
+                }
+                else{
+                    $form_string .= self::get_form_init_scripts($form);
+                    $form_string .= "<script type='text/javascript'>" . apply_filters("gform_cdata_open", "") . " jQuery(document).ready(function(){jQuery(document).trigger('gform_post_render', [{$form_id}, {$current_page}])}); " . apply_filters("gform_cdata_close", "") . "</script>";
+                }
             }
 
             return apply_filters('gform_get_form_filter',$form_string);
@@ -645,6 +654,23 @@ class GFFormDisplay{
             }
 
             return $progress_confirmation;
+        }
+    }
+
+    public static function footer_init_scripts($form_id){
+        global $_init_forms;
+
+        $form = RGFormsModel::get_form_meta($form_id);
+        $form_string = self::get_form_init_scripts($form);
+        $current_page = self::get_current_page($form_id);
+        $form_string .= "<script type='text/javascript'>" . apply_filters("gform_cdata_open", "") . " jQuery(document).ready(function(){jQuery(document).trigger('gform_post_render', [{$form_id}, {$current_page}])}); " . apply_filters("gform_cdata_close", "") . "</script>";
+
+        if(!isset($_init_forms[$form_id])){
+            echo $form_string;
+            if(!is_array($_init_forms))
+                $_init_forms = array();
+
+            $_init_forms[$form_id] = true;
         }
     }
 
@@ -1601,11 +1627,11 @@ class GFFormDisplay{
                 $input_type = RGFormsModel::get_input_type($field);
                 foreach($field["choices"] as $choice){
 
-                    if($choice["isSelected"] && $input_type == "select"){
+                    if(rgar($choice,"isSelected") && $input_type == "select"){
                         $val = isset($choice["price"]) ? $choice["value"] . "|" . GFCommon::to_number($choice["price"]) :  $choice["value"];
                         $default_values[$field["id"]] = $val;
                     }
-                    else if($choice["isSelected"]){
+                    else if(rgar($choice,"isSelected")){
                         if(!isset($default_values[$field["id"]]))
                             $default_values[$field["id"]] = array();
 
@@ -1670,10 +1696,7 @@ class GFFormDisplay{
     *
     * @param mixed $form
     */
-    private static function get_form_init_scripts($form) {
-        global $gf_global_obj;
-
-        $script_string = '';
+    private static function register_form_init_scripts($form) {
 
         // adding conditional logic script if conditional logic is configured for this form.
         // get_conditional_logic also adds the chosen script for the enhanced dropdown option.
@@ -1714,15 +1737,20 @@ class GFFormDisplay{
             self::add_init_script($form['id'], 'calculation', self::ON_PAGE_RENDER, self::get_calculations_init_script($form));
         }
 
+    }
+
+    public static function get_form_init_scripts($form) {
+
+        $script_string = '';
+
         // temporary solution for output gf_global obj until wp min version raised to 3.3
-        if(wp_script_is("gforms_gravityforms") && $gf_global_obj == null) {
+        if(wp_script_is("gforms_gravityforms")) {
             require_once(GFCommon::get_base_path() . '/currency.php');
             $gf_global_obj = array( 'gf_currency_config' => RGCurrency::get_currency(GFCommon::get_currency()) );
-            $gf_global_script = "var gf_global = " . json_encode($gf_global_obj) . ";";
+            $gf_global_script = "if(typeof gf_global == 'undefined') var gf_global = " . json_encode($gf_global_obj) . ";";
         }
 
         /* rendering initialization scripts */
-
         $init_scripts = rgar(self::$init_scripts, $form["id"]);
 
         if(!empty($init_scripts)){
@@ -1866,7 +1894,7 @@ class GFFormDisplay{
             if(!rgar($field, 'enableCalculation') || !rgar($field, 'calculationFormula'))
                 continue;
 
-            $formula_fields[] = array('field_id' => $field['id'], 'formula' => rgar($field, 'calculationFormula'), 'rounding' => rgar($field, 'calculationRounding'));
+            $formula_fields[] = array('field_id' => $field['id'], 'formula' => rgar($field, 'calculationFormula'), 'rounding' => rgar($field, 'calculationRounding'), 'numberFormat' => rgar($field, 'numberFormat') );
 
         }
 
