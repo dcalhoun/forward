@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+Version 1.5
+    - Added support for negative line items.
+    - Fixed error message which still referred to Donation fields
+    - Added new hook: "gform_paypal_get_feeds", allows the filtering of return configuration feeds
+    - Updated logging to use the GF Logging plugin
+    - Fixed issue with "business" variable not being sent via the IPN message
+	- Added new conditional logic options (greater than, less than, contains starts with, ends with) and support for other conditional fields
+    - Fixed notices
+    - Added ability to edit payment status when not set to Approved and not a subscription
+    - Added ability to edit payment details (amount, transaction id, date) for all payments types
+
+------------------------------------------------------------
 Version 1.4
     - Added additional log messages
     - Increased timeout value used when sending IPN message to PayPal for validation

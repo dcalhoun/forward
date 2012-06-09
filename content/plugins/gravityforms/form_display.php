@@ -114,13 +114,19 @@ class GFFormDisplay{
             //skip fields that are not file upload fields or that don't have a file to be uploaded or that have failed validation
             $input_type = RGFormsModel::get_input_type($field);
             if(!in_array($input_type, array("fileupload", "post_image")) || $field["failed_validation"] || empty($_FILES[$input_name]["name"])){
+                GFCommon::log_debug("upload_files() - skipping field: {$field["label"]}({$field["id"]} - {$field["type"]})");
                 continue;
             }
 
             $file_info = RGFormsModel::get_temp_filename($form["id"], $input_name);
+            GFCommon::log_debug("upload_files() - temp file info: " . print_r($file_info, true));
 
             if($file_info && move_uploaded_file($_FILES[$input_name]['tmp_name'], $target_path . $file_info["temp_filename"])){
                 $files[$input_name] = $file_info["uploaded_filename"];
+                GFCommon::log_debug("upload_files() - file uploaded successfully:  {$file_info["uploaded_filename"]}");
+            }
+            else{
+                GFCommon::log_error("upload_files() - file could not be uploaded: tmp_name: {$_FILES[$input_name]['tmp_name']} - target location: " . $target_path . $file_info["temp_filename"]);
             }
         }
 
@@ -792,6 +798,10 @@ class GFFormDisplay{
                 }
 
                 return true;
+            case 'singleproduct':
+                $quantity_id = $field["id"] . ".3";
+                $quantity = rgpost($quantity_id, $value);
+                
         }
 
         if(is_array($field["inputs"]))
@@ -802,6 +812,7 @@ class GFFormDisplay{
                     return false;
                 }
 
+                $strlen = strlen(trim($value));
                 if(!is_array($value) && strlen(trim($value)) > 0)
                     return false;
             }
@@ -1324,17 +1335,14 @@ class GFFormDisplay{
                         case "hiddenproduct" :
                             $quantity_id = $field["id"] . ".3";
                             $quantity = rgget($quantity_id, $value);
-                            if(empty($quantity))
-                                $quantity = 0;
-
-                            if(!is_numeric($quantity) || intval($quantity) != floatval($quantity))
-                            {
-                                $field["failed_validation"] = true;
-                                $field["validation_message"] = __("Please enter a valid quantity", "gravityforms");
-                            }
-                            else if($field["isRequired"] && empty($quantity) && !rgar($field, "disableQuantity") ){
+                            
+                            if($field["isRequired"] && rgblank($quantity) && !rgar($field, "disableQuantity") ){
                                 $field["failed_validation"] = true;
                                 $field["validation_message"] = rgempty("errorMessage", $field) ? __("This field is required.", "gravityforms") : rgar($field, "errorMessage");
+                            } 
+                            else if(!empty($quantity) && (!is_numeric($quantity) || intval($quantity) != floatval($quantity)) ) {
+                                $field["failed_validation"] = true;
+                                $field["validation_message"] = __("Please enter a valid quantity", "gravityforms");
                             }
 
                         break;
@@ -1876,7 +1884,7 @@ class GFFormDisplay{
                 continue;
 
             $mask = rgar($field, 'inputMaskValue');
-            $script = "jQuery('#input_{$form['id']}_{$field['id']}').mask('{$mask}'); ";
+            $script = "jQuery('#input_{$form['id']}_{$field['id']}').mask('{$mask}').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();}});";
 
             $script_str .= apply_filters("gform_input_mask_script_{$form['id']}", apply_filters("gform_input_mask_script", $script, $form['id'], $field['id'], $mask), $form['id'], $field['id'], $mask);
         }

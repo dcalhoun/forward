@@ -698,28 +698,36 @@ var GFCalc = function(formId, formulaFields){
         expr = calcObj.replaceFieldTags(formId, formulaField.formula, formulaField.numberFormat);
         result = '';
 
-        try {
+        if(calcObj.exprPatt.test(expr)) {
+            try {
 
-            if(calcObj.exprPatt.test(expr)) {
+                //run calculation
                 result = eval(expr);
-                var decimalSeparator, thousandSeparator;
-                if(formulaField.numberFormat == "decimal_comma"){
-                    decimalSeparator = ",";
-                    thousandSeparator = ".";
-                }
-                else if(formulaField.numberFormat == "decimal_dot"){
-                    decimalSeparator = ".";
-                    thousandSeparator = ",";
-                }
 
-                result = gformFormatNumber(result, !gformIsNumber(formulaField.rounding) ? -1 : formulaField.rounding, decimalSeparator, thousandSeparator);
+            } catch (e) {}
+        }
+
+        // allow users to modify result with their own function
+        if(window["gform_calculation_result"])
+            result = window["gform_calculation_result"](result, formulaField, formId);
+
+        //formatting number
+        if(field.hasClass('gfield_price')) {
+            result = gformFormatMoney(result ? result : 0);
+        }
+        else{
+
+            var decimalSeparator, thousandSeparator;
+            if(formulaField.numberFormat == "decimal_comma"){
+                decimalSeparator = ",";
+                thousandSeparator = ".";
             }
-
-            // allow users to modify result with their own function
-            if(window["gform_calculation_result"])
-                result = window["gform_calculation_result"](result, formulaField, formId);
-
-        } catch (e) {}
+            else if(formulaField.numberFormat == "decimal_dot"){
+                decimalSeparator = ".";
+                thousandSeparator = ",";
+            }
+            result = gformFormatNumber(result, !gformIsNumber(formulaField.rounding) ? -1 : formulaField.rounding, decimalSeparator, thousandSeparator);
+        }
 
         //If value doesn't change, abort.
         //This is needed to prevent an infinite loop condition with conditional logic
@@ -728,7 +736,6 @@ var GFCalc = function(formId, formulaFields){
 
         // if this is a calucation product, handle differently
         if(field.hasClass('gfield_price')) {
-            result = gformFormatMoney(result ? result : 0);
 
             formulaInput.text(result);
             jQuery('#ginput_base_price_' + formId + '_' + formulaField.field_id).val(result).trigger('change');
@@ -765,6 +772,8 @@ var GFCalc = function(formId, formulaFields){
             } else {
                 jQuery(input).keydown(function(){
                     calcObj.bindCalcEvent(inputId, formulaField, formId);
+                }).change(function(){
+                    calcObj.bindCalcEvent(inputId, formulaField, formId, 0);
                 });
             }
 

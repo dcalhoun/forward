@@ -12,7 +12,7 @@ class GFEntryList{
         {
             ?>
             <div style="margin:50px 0 0 10px;">
-                <?php echo sprintf(__("You don't have any active forms. Let's go %screate one%s", "gravityforms"), '<a href="?page=gravityforms.php&id=0">', '</a>'); ?>
+                <?php echo sprintf(__("You don't have any active forms. Let's go %screate one%s", "gravityforms"), '<a href="?page=gf_new_form">', '</a>'); ?>
             </div>
             <?php
         }

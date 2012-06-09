@@ -143,7 +143,7 @@ class GFPayPalData{
         for($i=0; $i<$count; $i++){
             $results[$i]["meta"] = maybe_unserialize($results[$i]["meta"]);
         }
-        return $results;
+        return apply_filters("gform_paypal_get_feeds_{$form_id}", apply_filters('gform_paypal_get_feeds', $results, $form_id), $form_id);
     }
 
     public static function get_feed($id){

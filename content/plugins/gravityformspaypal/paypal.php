@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms PayPal Add-On
 Plugin URI: http://www.gravityforms.com
 Description: Integrates Gravity Forms with PayPal, enabling end users to purchase goods and services through Gravity Forms.
-Version: 1.4
+Version: 1.5
 Author: rocketgenius
 Author URI: http://www.rocketgenius.com
 
@@ -37,16 +37,17 @@ class GFPayPal {
     private static $path = "gravityformspaypal/paypal.php";
     private static $url = "http://www.gravityforms.com";
     private static $slug = "gravityformspaypal";
-    private static $version = "1.4";
-    private static $min_gravityforms_version = "1.5";
+    private static $version = "1.5";
+    private static $min_gravityforms_version = "1.6.4";
     private static $production_url = "https://www.paypal.com/cgi-bin/webscr/";
     private static $sandbox_url = "https://www.sandbox.paypal.com/cgi-bin/webscr/";
-    private static $log = null;
+    private static $supported_fields = array("checkbox", "radio", "select", "text", "website", "textarea", "email", "hidden", "number", "phone", "multiselect", "post_title",
+		                            "post_tags", "post_custom_field", "post_content", "post_excerpt");
 
     //Plugin starting point. Will load appropriate files
     public static function init(){
-        if(!isset(self::$log))
-            self::$log = self::create_logger();
+		//supports logging
+		add_filter("gform_logging_supported", array("GFPayPal", "set_logging_supported"));
 
         if(basename($_SERVER['PHP_SELF']) == "plugins.php") {
 
@@ -78,6 +79,15 @@ class GFPayPal {
             //creates the subnav left menu
             add_filter("gform_addon_navigation", array('GFPayPal', 'create_menu'));
 
+            //add actions to allow the payment status to be modified
+            add_action('gform_payment_status', array('GFPayPal','admin_edit_payment_status'), 3, 3);
+            add_action('gform_entry_info', array('GFPayPal','admin_edit_payment_status_details'), 4, 2);
+            add_action('gform_after_update_entry', array('GFPayPal','admin_update_payment'), 4, 2);
+
+            //loading Gravity Forms tooltips
+            require_once(GFCommon::get_base_path() . "/tooltips.php");
+            add_filter('gform_tooltips', array('GFPayPal', 'tooltips'));
+
             if(self::is_paypal_page()){
 
                 //enqueueing sack for AJAX requests
@@ -90,9 +100,7 @@ class GFPayPal {
                 if(!class_exists("RGPayPalUpgrade"))
                     require_once("plugin-upgrade.php");
 
-                //loading Gravity Forms tooltips
-                require_once(GFCommon::get_base_path() . "/tooltips.php");
-                add_filter('gform_tooltips', array('GFPayPal', 'tooltips'));
+
 
                 //runs the setup when version changes
                 self::setup();
@@ -125,6 +133,10 @@ class GFPayPal {
             add_filter("gform_disable_post_creation", array("GFPayPal", "delay_post"), 10, 3);
             add_filter("gform_disable_user_notification", array("GFPayPal", "delay_autoresponder"), 10, 3);
             add_filter("gform_disable_admin_notification", array("GFPayPal", "delay_notification"), 10, 3);
+
+            // ManageWP premium update filters
+            add_filter( 'mwp_premium_update_notification', array('GFPayPal', 'premium_update_push') );
+            add_filter( 'mwp_premium_perform_update', array('GFPayPal', 'premium_update') );
         }
     }
 
@@ -136,6 +148,44 @@ class GFPayPal {
     }
 
     //-------------- Automatic upgrade ---------------------------------------
+
+
+    //Integration with ManageWP
+    public static function premium_update_push( $premium_update ){
+
+        if( !function_exists( 'get_plugin_data' ) )
+            include_once( ABSPATH.'wp-admin/includes/plugin.php');
+
+        $update = GFCommon::get_version_info();
+        if( $update["is_valid_key"] == true && version_compare(self::$version, $update["version"], '<') ){
+            $plugin_data = get_plugin_data( __FILE__ );
+            $plugin_data['type'] = 'plugin';
+            $plugin_data['slug'] = self::$path;
+            $plugin_data['new_version'] = isset($update['version']) ? $update['version'] : false ;
+            $premium_update[] = $plugin_data;
+        }
+
+        return $premium_update;
+    }
+
+    //Integration with ManageWP
+    public static function premium_update( $premium_update ){
+
+        if( !function_exists( 'get_plugin_data' ) )
+            include_once( ABSPATH.'wp-admin/includes/plugin.php');
+
+        $update = GFCommon::get_version_info();
+        if( $update["is_valid_key"] == true && version_compare(self::$version, $update["version"], '<') ){
+            $plugin_data = get_plugin_data( __FILE__ );
+            $plugin_data['slug'] = self::$path;
+            $plugin_data['type'] = 'plugin';
+            $plugin_data['url'] = isset($update["url"]) ? $update["url"] : false; // OR provide your own callback function for managing the update
+
+            array_push($premium_update, $plugin_data);
+        }
+        return $premium_update;
+    }
+
     public static function flush_version_info(){
         if(!class_exists("RGPayPalUpgrade"))
             require_once("plugin-upgrade.php");
@@ -205,19 +255,6 @@ class GFPayPal {
         update_option("gf_paypal_version", self::$version);
     }
 
-    private static function create_logger(){
-
-        if(!class_exists("KLogger")){
-            require_once(self::get_base_path() . "/KLogger.php");
-        }
-
-        $settings = get_option("gf_paypal_settings");
-        $log_level = rgempty("log_level", $settings) ? KLogger::OFF : rgar($settings, "log_level");
-
-        $log = new KLogger(self::get_base_path() . "/log.txt", $log_level);
-        return $log;
-    }
-
     //Adds feed tooltips to the list of tooltips
     public static function tooltips($tooltips){
         $paypal_tooltips = array(
@@ -236,7 +273,11 @@ class GFPayPal {
             "paypal_trial_period_enable" => "<h6>" . __("Trial Period", "gravityformspaypal") . "</h6>" . __("Enable a trial period.  The users recurring payment will not begin until after this trial period.", "gravityformspaypal"),
             "paypal_trial_amount" => "<h6>" . __("Trial Amount", "gravityformspaypal") . "</h6>" . __("Enter the trial period amount or leave it blank for a free trial.", "gravityformspaypal"),
             "paypal_trial_period" => "<h6>" . __("Trial Period", "gravityformspaypal") . "</h6>" . __("Select the trial period length.", "gravityformspaypal"),
-            "paypal_conditional" => "<h6>" . __("PayPal Condition", "gravityformspaypal") . "</h6>" . __("When the PayPal condition is enabled, form submissions will only be sent to PayPal when the condition is met. When disabled all form submissions will be sent to PayPal.", "gravityformspaypal")
+            "paypal_conditional" => "<h6>" . __("PayPal Condition", "gravityformspaypal") . "</h6>" . __("When the PayPal condition is enabled, form submissions will only be sent to PayPal when the condition is met. When disabled all form submissions will be sent to PayPal.", "gravityformspaypal"),
+            "paypal_edit_payment_amount" => "<h6>" . __("Amount", "gravityformspaypal") . "</h6>" . __("Enter the amount the user paid for this transaction.", "gravityformspaypal"),
+            "paypal_edit_payment_date" => "<h6>" . __("Date", "gravityformspaypal") . "</h6>" . __("Enter the date of this transaction.", "gravityformspaypal"),
+            "paypal_edit_payment_transaction_id" => "<h6>" . __("Transaction ID", "gravityformspaypal") . "</h6>" . __("The transacation id is returned from PayPal and uniquely identifies this payment.", "gravityformspaypal"),
+            "paypal_edit_payment_status" => "<h6>" . __("Status", "gravityformspaypal") . "</h6>" . __("Set the payment status. This status can only be altered if not currently set to Approved and not a subscription.", "gravityformspaypal")
         );
         return array_merge($tooltips, $paypal_tooltips);
     }
@@ -499,15 +540,6 @@ class GFPayPal {
             <?php
             return;
         }
-        else if(isset($_POST["gf_debug_submit"])){
-            check_admin_referer("update", "gf_paypal_update");
-            $settings = array(
-                                "log_level" => rgpost("gf_paypal_log_level")
-                                );
-
-            update_option("gf_paypal_settings", $settings);
-        }
-        $settings = get_option("gf_paypal_settings");
         $is_configured = get_option("gf_paypal_configured");
 
         ?>
@@ -527,26 +559,6 @@ class GFPayPal {
             <br/>
             <input type="checkbox" name="gf_paypal_configured" id="gf_paypal_configured" onclick="confirm_settings()" <?php echo $is_configured ? "checked='checked'" : ""?>/>
             <label for="gf_paypal_configured" class="inline"><?php _e("Confirm that your have configured your PayPal account to enable IPN", "gravityformspaypal") ?></label>
-
-            <div style="display:<?php echo rgempty("debug", $_GET) ? "none" : "block" ?>;">
-                <div class="hr-divider"></div>
-                <h3><?php _e("Debugging Settings", "gravityformspaypal") ?></h3>
-                <label for="gf_paypal_log_level" class="inline"><?php _e("Logging", "gravityformspaypal"); ?></label>
-                <select id="gf_paypal_log_level" name="gf_paypal_log_level">
-                    <option value="<?php echo KLogger::OFF ?>" <?php echo rgempty("log_level", $settings) ? "selected='selected'" : "" ?>><?php _e("Off", "gravityformspaypal") ?></option>
-                    <option value="<?php echo KLogger::DEBUG ?>" <?php echo rgar($settings, "log_level") == KLogger::DEBUG ? "selected='selected'" : "" ?>><?php _e("Log all messages", "gravityformspaypal") ?></option>
-                    <option value="<?php echo KLogger::ERROR ?>" <?php echo rgar($settings, "log_level") == KLogger::ERROR ? "selected='selected'" : "" ?>><?php _e("Log errors only", "gravityformspaypal") ?></option>
-                </select>
-                <?php
-                if(file_exists(self::get_base_path() . "/log.txt")){
-                    ?>
-                    &nbsp;<a href="<?php echo self::get_base_url() . "/log.txt" ?>" target="_blank"><?php _e("view log", "gravityformspaypal") ?></a>
-                    <?php
-                }
-                ?>
-                <div style="margin-top: 15px;"><input type="submit" name="gf_debug_submit" class="button-primary" value="<?php _e("Save", "gravityformspaypal") ?>" /></div>
-            </div>
-
             <script type="text/javascript">
                 function confirm_settings(){
                     var confirmed = jQuery("#gf_paypal_configured").is(":checked") ? 1 : 0;
@@ -1163,7 +1175,7 @@ class GFPayPal {
                     <?php _e("The form selected does not have any Product fields. Please add a Product field to the form and try again.", "gravityformspaypal") ?>
                 </div>
                 <div id="gf_paypal_invalid_donation_form" class="gf_paypal_invalid_form" style="display:none;">
-                    <?php _e("The form selected does not have any Donation fields. Please add a Donation field to the form and try again.", "gravityformspaypal") ?>
+                    <?php _e("The form selected does not have any Product fields. Please add a Product field to the form and try again.", "gravityformspaypal") ?>
                 </div>
             </div>
             <div id="paypal_field_group" valign="top" <?php echo empty($config["meta"]["type"]) || empty($config["form_id"]) ? "style='display:none;'" : "" ?>>
@@ -1172,7 +1184,7 @@ class GFPayPal {
                     <div class="margin_vertical_10">
                         <label class="left_header" for="gf_paypal_recurring_amount"><?php _e("Recurring Amount", "gravityformspaypal"); ?> <?php gform_tooltip("paypal_recurring_amount") ?></label>
                         <select id="gf_paypal_recurring_amount" name="gf_paypal_recurring_amount">
-                            <?php echo self::get_product_options($form, $config["meta"]["recurring_amount_field"]) ?>
+                            <?php echo self::get_product_options($form, rgar($config["meta"],"recurring_amount_field")) ?>
                         </select>
                     </div>
 
@@ -1182,7 +1194,7 @@ class GFPayPal {
                             <?php
                             for($i=1; $i<=100; $i++){
                             ?>
-                                <option value="<?php echo $i ?>" <?php echo $config["meta"]["billing_cycle_number"] == $i ? "selected='selected'" : "" ?>><?php echo $i ?></option>
+                                <option value="<?php echo $i ?>" <?php echo rgar($config["meta"],"billing_cycle_number") == $i ? "selected='selected'" : "" ?>><?php echo $i ?></option>
                             <?php
                             }
                             ?>
@@ -1201,7 +1213,7 @@ class GFPayPal {
                             <option value=""><?php _e("Infinite", "gravityformspaypal") ?></option>
                             <?php
                             for($i=2; $i<=30; $i++){
-                                $selected = ($i == $config["meta"]["recurring_times"]) ? 'selected="selected"' : '';
+                                $selected = ($i == rgar($config["meta"],"recurring_times")) ? 'selected="selected"' : '';
                                 ?>
                                 <option value="<?php echo $i ?>" <?php echo $selected; ?>><?php echo $i ?></option>
                                 <?php
@@ -1298,12 +1310,12 @@ class GFPayPal {
                         </li>
 
                         <li id="paypal_post_update_action" <?php echo $display_post_fields && $config["meta"]["type"] == "subscription" ? "" : "style='display:none;'" ?>>
-                            <input type="checkbox" name="gf_paypal_update_post" id="gf_paypal_update_post" value="1" <?php echo $config["meta"]["update_post_action"] ? "checked='checked'" : ""?> onclick="var action = this.checked ? 'draft' : ''; jQuery('#gf_paypal_update_action').val(action);" />
+                            <input type="checkbox" name="gf_paypal_update_post" id="gf_paypal_update_post" value="1" <?php echo rgar($config["meta"],"update_post_action") ? "checked='checked'" : ""?> onclick="var action = this.checked ? 'draft' : ''; jQuery('#gf_paypal_update_action').val(action);" />
                             <label class="inline" for="gf_paypal_update_post"><?php _e("Update Post when subscription is cancelled.", "gravityformspaypal"); ?> <?php gform_tooltip("paypal_update_post") ?></label>
                             <select id="gf_paypal_update_action" name="gf_paypal_update_action" onchange="var checked = jQuery(this).val() ? 'checked' : false; jQuery('#gf_paypal_update_post').attr('checked', checked);">
                                 <option value=""></option>
-                                <option value="draft" <?php echo $config["meta"]["update_post_action"] == "draft" ? "selected='selected'" : ""?>><?php _e("Mark Post as Draft", "gravityformspaypal") ?></option>
-                                <option value="delete" <?php echo $config["meta"]["update_post_action"] == "delete" ? "selected='selected'" : ""?>><?php _e("Delete Post", "gravityformspaypal") ?></option>
+                                <option value="draft" <?php echo rgar($config["meta"],"update_post_action") == "draft" ? "selected='selected'" : ""?>><?php _e("Mark Post as Draft", "gravityformspaypal") ?></option>
+                                <option value="delete" <?php echo rgar($config["meta"],"update_post_action") == "delete" ? "selected='selected'" : ""?>><?php _e("Delete Post", "gravityformspaypal") ?></option>
                             </select>
                         </li>
 
@@ -1328,22 +1340,24 @@ class GFPayPal {
                                 <td>
                                     <div id="gf_paypal_conditional_container" <?php echo !rgar($config['meta'], 'paypal_conditional_enabled') ? "style='display:none'" : ""?>>
 
-                                        <div id="gf_paypal_conditional_fields" <?php echo empty($selection_fields) ? "style='display:none'" : ""?>>
+                                        <div id="gf_paypal_conditional_fields" style="display:none">
                                             <?php _e("Send to PayPal if ", "gravityformspaypal") ?>
-
-                                            <select id="gf_paypal_conditional_field_id" name="gf_paypal_conditional_field_id" class="optin_select" onchange='jQuery("#gf_paypal_conditional_value").html(GetFieldValues(jQuery(this).val(), "", 20));'>
-                                                <?php echo empty($selection_fields) ? "" : $selection_fields ?>
+                                            <select id="gf_paypal_conditional_field_id" name="gf_paypal_conditional_field_id" class="optin_select" onchange='jQuery("#gf_paypal_conditional_value_container").html(GetFieldValues(jQuery(this).val(), "", 20));'>
                                             </select>
                                             <select id="gf_paypal_conditional_operator" name="gf_paypal_conditional_operator">
                                                 <option value="is" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "is" ? "selected='selected'" : "" ?>><?php _e("is", "gravityformspaypal") ?></option>
                                                 <option value="isnot" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "isnot" ? "selected='selected'" : "" ?>><?php _e("is not", "gravityformspaypal") ?></option>
+                                                <option value=">" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == ">" ? "selected='selected'" : "" ?>><?php _e("greater than", "gravityformspaypal") ?></option>
+                                                <option value="<" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "<" ? "selected='selected'" : "" ?>><?php _e("less than", "gravityformspaypal") ?></option>
+                                                <option value="contains" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "contains" ? "selected='selected'" : "" ?>><?php _e("contains", "gravityformspaypal") ?></option>
+                                                <option value="starts_with" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "starts_with" ? "selected='selected'" : "" ?>><?php _e("starts with", "gravityformspaypal") ?></option>
+                                                <option value="ends_with" <?php echo rgar($config['meta'], 'paypal_conditional_operator') == "ends_with" ? "selected='selected'" : "" ?>><?php _e("ends with", "gravityformspaypal") ?></option>
                                             </select>
-                                            <select id="gf_paypal_conditional_value" name="gf_paypal_conditional_value" class='optin_select'></select>
-
+                                            <div id="gf_paypal_conditional_value_container" name="gf_paypal_conditional_value_container" style="display:inline;"></div>
                                         </div>
 
-                                        <div id="gf_paypal_conditional_message" <?php echo !empty($selection_fields) ? "style='display:none'" : ""?>>
-                                            <?php _e("To create a registration condition, your form must have a drop down, checkbox or multiple choice field", "gravityform") ?>
+                                        <div id="gf_paypal_conditional_message" style="display:none">
+                                            <?php _e("To create a registration condition, your form must have a field supported by conditional logic.", "gravityform") ?>
                                         </div>
 
                                     </div>
@@ -1351,7 +1365,6 @@ class GFPayPal {
                             </tr>
                         </table>
                     </div>
-
                 </div> <!-- / paypal conditional -->
 
                 <div id="paypal_submit_container" class="margin_vertical_30">
@@ -1541,7 +1554,8 @@ class GFPayPal {
                 if(optinConditionField){
                     jQuery("#gf_paypal_conditional_message").hide();
                     jQuery("#gf_paypal_conditional_fields").show();
-                    jQuery("#gf_paypal_conditional_value").html(GetFieldValues(optinConditionField, selectedValue, 20));
+                    jQuery("#gf_paypal_conditional_value_container").html(GetFieldValues(optinConditionField, selectedValue, 20));
+                    jQuery("#gf_paypal_conditional_value").val(selectedValue);
                 }
                 else{
                     jQuery("#gf_paypal_conditional_message").show();
@@ -1558,24 +1572,39 @@ class GFPayPal {
 
                 var str = "";
                 var field = GetFieldById(fieldId);
-                if(!field || !field.choices)
+                if(!field)
                     return "";
 
                 var isAnySelected = false;
 
-                for(var i=0; i<field.choices.length; i++){
-                    var fieldValue = field.choices[i].value ? field.choices[i].value : field.choices[i].text;
-                    var isSelected = fieldValue == selectedValue;
-                    var selected = isSelected ? "selected='selected'" : "";
-                    if(isSelected)
-                        isAnySelected = true;
+                if(field["type"] == "post_category" && field["displayAllCategories"]){
+					str += '<?php $dd = wp_dropdown_categories(array("class"=>"optin_select", "orderby"=> "name", "id"=> "gf_paypal_conditional_value", "name"=> "gf_paypal_conditional_value", "hierarchical"=>true, "hide_empty"=>0, "echo"=>false)); echo str_replace("\n","", str_replace("'","\\'",$dd)); ?>';
+				}
+				else if(field.choices){
+					str += '<select id="gf_paypal_conditional_value" name="gf_paypal_conditional_value" class="optin_select">'
 
-                    str += "<option value='" + fieldValue.replace(/'/g, "&#039;") + "' " + selected + ">" + TruncateMiddle(field.choices[i].text, labelMaxCharacters) + "</option>";
-                }
 
-                if(!isAnySelected && selectedValue){
-                    str += "<option value='" + selectedValue.replace(/'/g, "&#039;") + "' selected='selected'>" + TruncateMiddle(selectedValue, labelMaxCharacters) + "</option>";
-                }
+	                for(var i=0; i<field.choices.length; i++){
+	                    var fieldValue = field.choices[i].value ? field.choices[i].value : field.choices[i].text;
+	                    var isSelected = fieldValue == selectedValue;
+	                    var selected = isSelected ? "selected='selected'" : "";
+	                    if(isSelected)
+	                        isAnySelected = true;
+
+	                    str += "<option value='" + fieldValue.replace(/'/g, "&#039;") + "' " + selected + ">" + TruncateMiddle(field.choices[i].text, labelMaxCharacters) + "</option>";
+	                }
+
+	                if(!isAnySelected && selectedValue){
+	                    str += "<option value='" + selectedValue.replace(/'/g, "&#039;") + "' selected='selected'>" + TruncateMiddle(selectedValue, labelMaxCharacters) + "</option>";
+	                }
+	                str += "</select>";
+				}
+				else
+				{
+					selectedValue = selectedValue ? selectedValue.replace(/'/g, "&#039;") : "";
+					//create a text field for fields that don't have choices (i.e text, textarea, number, email, etc...)
+					str += "<input type='text' placeholder='<?php _e("Enter value", "gravityforms"); ?>' id='gf_paypal_conditional_value' name='gf_paypal_conditional_value' value='" + selectedValue.replace(/'/g, "&#039;") + "'>";
+				}
 
                 return str;
             }
@@ -1604,13 +1633,23 @@ class GFPayPal {
                 for(var i=0; i<form.fields.length; i++){
                     fieldLabel = form.fields[i].adminLabel ? form.fields[i].adminLabel : form.fields[i].label;
                     inputType = form.fields[i].inputType ? form.fields[i].inputType : form.fields[i].type;
-                    if(inputType == "checkbox" || inputType == "radio" || inputType == "select"){
+                    if (IsConditionalLogicField(form.fields[i])) {
                         var selected = form.fields[i].id == selectedFieldId ? "selected='selected'" : "";
                         str += "<option value='" + form.fields[i].id + "' " + selected + ">" + TruncateMiddle(fieldLabel, labelMaxCharacters) + "</option>";
                     }
                 }
                 return str;
             }
+
+            function IsConditionalLogicField(field){
+			    inputType = field.inputType ? field.inputType : field.type;
+			    var supported_fields = ["checkbox", "radio", "select", "text", "website", "textarea", "email", "hidden", "number", "phone", "multiselect", "post_title",
+			                            "post_tags", "post_custom_field", "post_content", "post_excerpt"];
+
+			    var index = jQuery.inArray(inputType, supported_fields);
+
+			    return index >= 0;
+			}
 
         </script>
 
@@ -1745,9 +1784,12 @@ class GFPayPal {
             break;
         }
 
-        if(!$query_string) return $confirmation;
+        $query_string = apply_filters("gform_paypal_query_{$form['id']}", apply_filters("gform_paypal_query", $query_string, $form, $entry), $form, $entry);
 
-        $url .= apply_filters("gform_paypal_query_{$form['id']}", apply_filters("gform_paypal_query", $query_string, $form, $entry), $form, $entry);
+        if(!$query_string)
+            return $confirmation;
+
+        $url .= $query_string;
 
         if(headers_sent() || $ajax){
             $confirmation = "<script>function gformRedirect(){document.location.href='$url';}";
@@ -1766,7 +1808,7 @@ class GFPayPal {
 
         $config = $config["meta"];
 
-        $operator = $config["paypal_conditional_operator"];
+        $operator = isset($config["paypal_conditional_operator"]) ? $config["paypal_conditional_operator"] : "";
         $field = RGFormsModel::get_field($form, $config["paypal_conditional_field_id"]);
 
         if(empty($field) || !$config["paypal_conditional_enabled"])
@@ -1777,10 +1819,8 @@ class GFPayPal {
 
         $field_value = RGFormsModel::get_field_value($field, array());
 
-        $is_value_match = RGFormsModel::is_value_match($field_value, $config["paypal_conditional_value"]);
-        $is_match = $is_value_match && $is_visible;
-
-        $go_to_paypal = ($operator == "is" && $is_match) || ($operator == "isnot" && !$is_match);
+        $is_value_match = RGFormsModel::is_value_match($field_value, $config["paypal_conditional_value"], $operator);
+        $go_to_paypal = $is_value_match && $is_visible;
 
         return  $go_to_paypal;
     }
@@ -1853,28 +1893,24 @@ class GFPayPal {
     }
 
     public static function process_ipn($wp){
-
         //Ignore requests that are not IPN
         if(RGForms::get("page") != "gf_paypal_ipn")
             return;
 
-        if(!isset(self::$log))
-            self::$log = self::create_logger();
-
-        self::$log->LogDebug("IPN request received. Starting to process...");
-        self::$log->LogDebug(print_r($_POST, true));
+        self::log_debug("IPN request received. Starting to process...");
+        self::log_debug(print_r($_POST, true));
 
         //Send request to paypal and verify it has not been spoofed
         if(!self::verify_paypal_ipn()){
-            self::$log->LogError("IPN request could not be verified by PayPal. Aborting.");
+            self::log_error("IPN request could not be verified by PayPal. Aborting.");
             return;
         }
-        self::$log->LogDebug("IPN message successfully verified by PayPal");
+        self::log_debug("IPN message successfully verified by PayPal");
 
         //Valid IPN requests must have a custom field
         $custom = RGForms::post("custom");
         if(empty($custom)){
-            self::$log->LogError("IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.");
+            self::log_error("IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.");
             return;
         }
 
@@ -1883,39 +1919,40 @@ class GFPayPal {
         $hash_matches = wp_hash($entry_id) == $hash;
         //Validates that Entry Id wasn't tampered with
         if(!RGForms::post("test_ipn") && !$hash_matches){
-            self::$log->LogError("Entry Id verification failed. Hash does not match. Custom field: {$custom}. Aborting.");
+            self::log_error("Entry Id verification failed. Hash does not match. Custom field: {$custom}. Aborting.");
             return;
         }
 
-        self::$log->LogDebug("IPN message has a valid custom field: {$custom}");
+        self::log_debug("IPN message has a valid custom field: {$custom}");
 
         //$entry_id = RGForms::post("custom");
         $entry = RGFormsModel::get_lead($entry_id);
 
         //Ignore orphan IPN messages (ones without an entry)
         if(!$entry){
-            self::$log->LogError("Entry could not be found. Entry ID: {$entry_id}. Aborting.");
+            self::log_error("Entry could not be found. Entry ID: {$entry_id}. Aborting.");
             return;
         }
-        self::$log->LogDebug("Entry has been found." . print_r($entry, true));
+        self::log_debug("Entry has been found." . print_r($entry, true));
 
         $config = self::get_config($entry["form_id"]);
         //Ignore IPN messages from forms that are no longer configured with the PayPal add-on
         if(!$config){
-            self::$log->LogError("Form no longer is configured with PayPal Addon. Form ID: {$entry["form_id"]}. Aborting.");
+            self::log_error("Form no longer is configured with PayPal Addon. Form ID: {$entry["form_id"]}. Aborting.");
             return;
         }
-        self::$log->LogDebug("Form {$entry["form_id"]} is properly configured.");
+        self::log_debug("Form {$entry["form_id"]} is properly configured.");
 
         //Only process test messages coming fron SandBox and only process production messages coming from production PayPal
         if( ($config["meta"]["mode"] == "test" && !RGForms::post("test_ipn")) || ($config["meta"]["mode"] == "production" && RGForms::post("test_ipn"))){
-            self::$log->LogError("Invalid test/production mode. IPN message mode (test/production) does not match mode configured in the PayPal feed. Configured Mode: {$config["meta"]["mode"]}. IPN test mode: " . RGForms::post("test_ipn"));
+            self::log_error("Invalid test/production mode. IPN message mode (test/production) does not match mode configured in the PayPal feed. Configured Mode: {$config["meta"]["mode"]}. IPN test mode: " . RGForms::post("test_ipn"));
             return;
         }
 
         //Check business email to make sure it matches
-        if(strtolower(trim($_POST["business"])) != strtolower(trim($config["meta"]["email"]))){
-            self::$log->LogError("PayPal email does not match. Configured email:" . strtolower(trim($config["meta"]["email"])) . " - Email from IPN message: " . strtolower(trim($_POST["business"])));
+        $recipient_email = rgempty("business") ? rgpost("receiver_email") : rgpost("business");
+        if(strtolower(trim($recipient_email)) != strtolower(trim($config["meta"]["email"]))){
+            self::log_error("PayPal email does not match. Email entered on PayPal feed:" . strtolower(trim($config["meta"]["email"])) . " - Email from IPN message: " . $recipient_email);
             return;
         }
 
@@ -1923,18 +1960,18 @@ class GFPayPal {
         $cancel = apply_filters("gform_paypal_pre_ipn", false, $_POST, $entry, $config);
 
         if(!$cancel){
-            self::$log->LogDebug("Setting payment status...");
+            self::log_debug("Setting payment status...");
             self::set_payment_status($config, $entry, RGForms::post("payment_status"), RGForms::post("txn_type"), RGForms::post("txn_id"), RGForms::post("parent_txn_id"), RGForms::post("subscr_id"), RGForms::post("mc_gross"), RGForms::post("pending_reason"), RGForms::post("reason_code") );
         }
         else{
-            self::$log->LogDebug("IPN processing cancelled by the gform_paypal_pre_ipn filter. Aborting.");
+            self::log_debug("IPN processing cancelled by the gform_paypal_pre_ipn filter. Aborting.");
         }
 
-        self::$log->LogDebug("Before gform_paypal_post_ipn.");
+        self::log_debug("Before gform_paypal_post_ipn.");
         //Post IPN processing action
         do_action("gform_paypal_post_ipn", $_POST, $entry, $config, $cancel);
 
-        self::$log->LogDebug("IPN processing complete.");
+        self::log_debug("IPN processing complete.");
     }
 
     public static function set_payment_status($config, $entry, $status, $transaction_type, $transaction_id, $parent_transaction_id, $subscriber_id, $amount, $pending_reason, $reason){
@@ -1945,19 +1982,19 @@ class GFPayPal {
             $user_id = $current_user->ID;
             $user_name = $user_data->display_name;
         }
-        self::$log->LogDebug("Payment status: {$status} - Transaction Type: {$transaction_type} - Transaction ID: {$transaction_id} - Parent Transaction: {$parent_transaction_id} - Subscriber ID: {$subscriber_id} - Amount: {$amount} - Pending reason: {$pending_reason} - Reason: {$reason}");
-        self::$log->LogDebug("Entry: " . print_r($entry, true));
+        self::log_debug("Payment status: {$status} - Transaction Type: {$transaction_type} - Transaction ID: {$transaction_id} - Parent Transaction: {$parent_transaction_id} - Subscriber ID: {$subscriber_id} - Amount: {$amount} - Pending reason: {$pending_reason} - Reason: {$reason}");
+        self::log_debug("Entry: " . print_r($entry, true));
 
         switch(strtolower($transaction_type)){
             case "subscr_payment" :
                 if($entry["payment_status"] != "Active") {
-                    self::$log->LogDebug("Starting subscription");
+                    self::log_debug("Starting subscription");
                     self::start_subscription($entry, $subscriber_id, $amount, $user_id, $user_name);
                 } else {
-                    self::$log->LogDebug("Payment status is already active, so simply adding a Note");
+                    self::log_debug("Payment status is already active, so simply adding a Note");
                     RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Subscription payment has been made. Amount: %s. Transaction Id: %s", "gravityforms"), GFCommon::to_money($amount, $entry["currency"]), $transaction_id));
                 }
-                self::$log->LogDebug("Inserting payment transaction");
+                self::log_debug("Inserting payment transaction");
                 GFPayPalData::insert_transaction($entry["id"], "payment", $subscriber_id, $transaction_id, $parent_transaction_id, $amount);
             break;
 
@@ -1965,7 +2002,7 @@ class GFPayPal {
                 $trial_amount = GFCommon::to_number($config["meta"]["trial_amount"]);
                 //Starting subscription if there is a free trial period. Otherwise, subscription will be started when payment is received (i.e. sbscr_payment)
                 if($entry["payment_status"] != "Active" && $config["meta"]["trial_period_enabled"] && empty($trial_amount)){
-                    self::$log->LogDebug("Starting subscription");
+                    self::log_debug("Starting subscription");
                     self::start_subscription($entry, $subscriber_id, $amount, $user_id, $user_name);
                 }
             break;
@@ -1974,7 +2011,7 @@ class GFPayPal {
                 if($entry["payment_status"] != "Cancelled"){
                     $entry["payment_status"] = "Cancelled";
 
-                    self::$log->LogDebug("Cancelling subscription");
+                    self::log_debug("Cancelling subscription");
                     RGFormsModel::update_lead($entry);
                     RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Subscription has been cancelled. Subscriber Id: %s", "gravityforms"), $subscriber_id));
 
@@ -1982,11 +2019,11 @@ class GFPayPal {
                         $post = get_post($entry["post_id"]);
                         $post->post_status = 'draft';
                         wp_update_post($post);
-                        self::$log->LogDebug("Marking associated post as a Draft");
+                        self::log_debug("Marking associated post as a Draft");
                     }
                     if($config["meta"]["update_post_action"] == "delete" && !empty($entry["post_id"])){
                         wp_delete_post($entry["post_id"]);
-                        self::$log->LogDebug("Deleting associated post");
+                        self::log_debug("Deleting associated post");
                     }
 
                     do_action("gform_subscription_canceled", $entry, $config, $transaction_id);
@@ -1997,7 +2034,7 @@ class GFPayPal {
                 if($entry["payment_status"] != "Expired"){
                     $entry["payment_status"] = "Expired";
 
-                    self::$log->LogDebug("Setting entry as expired");
+                    self::log_debug("Setting entry as expired");
                     RGFormsModel::update_lead($entry);
                     RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Subscription has expired. Subscriber Id: %s", "gravityforms"), $subscriber_id));
                 }
@@ -2007,7 +2044,7 @@ class GFPayPal {
                 if($entry["payment_status"] != "Failed"){
                     $entry["payment_status"] = "Failed";
 
-                    self::$log->LogDebug("Marking entry as Failed");
+                    self::log_debug("Marking entry as Failed");
                     RGFormsModel::update_lead($entry);
                     RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Subscription signup has failed. Subscriber Id: %s", "gravityforms"), $subscriber_id));
                 }
@@ -2018,9 +2055,9 @@ class GFPayPal {
                 //handles products and donation
                 switch(strtolower($status)){
                     case "completed" :
-                        self::$log->LogDebug("Processing a completed payment");
+                        self::log_debug("Processing a completed payment");
                         if($entry["payment_status"] != "Approved"){
-                            self::$log->LogDebug("Entry is not already approved. Proceeding...");
+                            self::log_debug("Entry is not already approved. Proceeding...");
                             $entry["payment_status"] = "Approved";
                             $entry["payment_amount"] = $amount;
                             $entry["payment_date"] = gmdate("y-m-d H:i:s");
@@ -2028,27 +2065,27 @@ class GFPayPal {
                             $entry["transaction_type"] = 1; //payment
 
                             if(!$entry["is_fulfilled"]){
-                                self::$log->LogDebug("Payment has been made. Fulfilling order.");
+                                self::log_debug("Payment has been made. Fulfilling order.");
                                 self::fulfill_order($entry, $transaction_id, $amount);
-                                self::$log->LogDebug("Order has been fulfilled");
+                                self::log_debug("Order has been fulfilled");
                                 $entry["is_fulfilled"] = true;
                             }
 
-                            self::$log->LogDebug("Updating entry.");
+                            self::log_debug("Updating entry.");
                             RGFormsModel::update_lead($entry);
-                            self::$log->LogDebug("Adding note.");
+                            self::log_debug("Adding note.");
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment has been approved. Amount: %s. Transaction Id: %s", "gravityforms"), GFCommon::to_money($entry["payment_amount"], $entry["currency"]), $transaction_id));
                         }
-                        self::$log->LogDebug("Inserting transaction.");
+                        self::log_debug("Inserting transaction.");
                         GFPayPalData::insert_transaction($entry["id"], "payment", "", $transaction_id, $parent_transaction_id, $amount);
                     break;
 
                     case "reversed" :
-                        self::$log->LogDebug("Processing reversal.");
+                        self::log_debug("Processing reversal.");
                         if($entry["payment_status"] != "Reversed"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Reversed";
-                                self::$log->LogDebug("Setting entry as Reversed");
+                                self::log_debug("Setting entry as Reversed");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment has been reversed. Transaction Id: %s. Reason: %s", "gravityforms"), $transaction_id, self::get_reason($reason)));
@@ -2058,11 +2095,11 @@ class GFPayPal {
                     break;
 
                     case "canceled_reversal" :
-                        self::$log->LogDebug("Processing a reversal cancellation");
+                        self::log_debug("Processing a reversal cancellation");
                         if($entry["payment_status"] != "Approved"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Approved";
-                                self::$log->LogDebug("Setting entry as approved");
+                                self::log_debug("Setting entry as approved");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment reversal has been canceled and the funds have been transferred to your account. Transaction Id: %s", "gravityforms"), $entry["transaction_id"]));
@@ -2072,11 +2109,11 @@ class GFPayPal {
                     break;
 
                     case "denied" :
-                        self::$log->LogDebug("Processing a Denied request.");
+                        self::log_debug("Processing a Denied request.");
                         if($entry["payment_status"] != "Denied"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Denied";
-                                self::$log->LogDebug("Setting entry as Denied.");
+                                self::log_debug("Setting entry as Denied.");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment has been denied. Transaction Id: %s", "gravityforms"), $transaction_id));
@@ -2086,13 +2123,13 @@ class GFPayPal {
                     break;
 
                     case "pending" :
-                        self::$log->LogDebug("Processing a pending transaction.");
+                        self::log_debug("Processing a pending transaction.");
                         if($entry["payment_status"] != "Pending"){
                             if($entry["transaction_type"] != 2){
                                 $entry["payment_status"] = "Pending";
                                 $entry["payment_amount"] = $amount;
                                 $entry["transaction_type"] = 1; //payment
-                                self::$log->LogDebug("Setting entry as Pending.");
+                                self::log_debug("Setting entry as Pending.");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment is pending. Amount: %s. Transaction Id: %s. Reason: %s", "gravityforms"), GFCommon::to_money($amount, $entry["currency"]), $transaction_id, self::get_pending_reason($pending_reason)));
@@ -2102,11 +2139,11 @@ class GFPayPal {
                     break;
 
                     case "refunded" :
-                        self::$log->LogDebug("Processing a Refund request.");
+                        self::log_debug("Processing a Refund request.");
                         if($entry["payment_status"] != "Refunded"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Refunded";
-                                self::$log->LogDebug("Setting entry as Refunded.");
+                                self::log_debug("Setting entry as Refunded.");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment has been refunded. Refunded amount: %s. Transaction Id: %s", "gravityforms"), $amount, $transaction_id));
@@ -2116,11 +2153,11 @@ class GFPayPal {
                     break;
 
                     case "voided" :
-                        self::$log->LogDebug("Processing a Voided request.");
+                        self::log_debug("Processing a Voided request.");
                         if($entry["payment_status"] != "Voided"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Voided";
-                                self::$log->LogDebug("Setting entry as Voided.");
+                                self::log_debug("Setting entry as Voided.");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Authorization has been voided. Transaction Id: %s", "gravityforms"), $transaction_id));
@@ -2130,10 +2167,10 @@ class GFPayPal {
                     break;
 
                     case "processed" :
-                        self::$log->LogDebug("Processing a 'processed' request.");
+                        self::log_debug("Processing a 'processed' request.");
                         if($entry["transaction_type"] != 2){
                             $entry["payment_status"] = "Pending";
-                            self::$log->LogDebug("Setting entry as Pending.");
+                            self::log_debug("Setting entry as Pending.");
                             RGFormsModel::update_lead($entry);
                             $entry["transaction_type"] = 1; //payment
                         }
@@ -2143,11 +2180,11 @@ class GFPayPal {
                     break;
 
                     case "failed" :
-                        self::$log->LogDebug("Processed a Failed request.");
+                        self::log_debug("Processed a Failed request.");
                         if($entry["payment_status"] != "Failed"){
                             if($entry["transaction_type"] == 1){
                                 $entry["payment_status"] = "Failed";
-                                self::$log->LogDebug("Setting entry as Failed.");
+                                self::log_debug("Setting entry as Failed.");
                                 RGFormsModel::update_lead($entry);
                             }
                             RGFormsModel::add_note($entry["id"], $user_id, $user_name, sprintf(__("Payment has Failed. Failed payments occur when they are made via your customer's bank account and could not be completed. Transaction Id: %s", "gravityforms"), $transaction_id));
@@ -2160,7 +2197,7 @@ class GFPayPal {
 
             break;
         }
-        self::$log->LogDebug("Before gform_post_payment_status.");
+        self::log_debug("Before gform_post_payment_status.");
         do_action("gform_post_payment_status", $config, $entry, $status,  $transaction_id, $subscriber_id, $amount, $pending_reason, $reason);
     }
 
@@ -2169,21 +2206,21 @@ class GFPayPal {
         $config = self::get_config($entry["form_id"]);
 
         if($config && $config["meta"]["delay_post"]){
-            self::$log->LogDebug("Creating post.");
+            self::log_debug("Creating post.");
             RGFormsModel::create_post($form, $entry);
         }
 
         if($config && $config["meta"]["delay_notification"]){
-           self::$log->LogDebug("Sending admin notification.");
+           self::log_debug("Sending admin notification.");
            GFCommon::send_admin_notification($form, $entry);
         }
 
         if($config && $config["meta"]["delay_autoresponder"]){
-           self::$log->LogDebug("Sending user notification.");
+           self::log_debug("Sending user notification.");
            GFCommon::send_user_notification($form, $entry);
         }
 
-        self::$log->LogDebug("Before gform_paypal_fulfillment.");
+        self::log_debug("Before gform_paypal_fulfillment.");
         do_action("gform_paypal_fulfillment", $entry, $config, $transaction_id, $amount);
     }
 
@@ -2285,12 +2322,12 @@ class GFPayPal {
         }
         $url = RGForms::post("test_ipn") ? self::$sandbox_url : self::$production_url;
 
-        self::$log->LogDebug("Sending IPN request to PayPal for validation. URL: $url - Data: $req");
+        self::log_debug("Sending IPN request to PayPal for validation. URL: $url - Data: $req");
 
         //Post back to PayPal system to validate
         $request = new WP_Http();
         $response = $request->post($url, array("sslverify" => false, "ssl" => true, "body" => $req, "timeout"=>20));
-        self::$log->LogDebug("Response: " . print_r($response, true));
+        self::log_debug("Response: " . print_r($response, true));
 
         return !is_wp_error($response) && $response["body"] == "VERIFIED";
     }
@@ -2318,6 +2355,7 @@ class GFPayPal {
         $products = GFCommon::get_product_fields($form, $entry, true);
         $product_index = 1;
         $total = 0;
+        $discount = 0;
 
         foreach($products["products"] as $product){
             $option_fields = "";
@@ -2332,11 +2370,21 @@ class GFPayPal {
                     $option_index++;
                 }
             }
+
             $name = urlencode($product["name"]);
-            $fields .= "&item_name_{$product_index}={$name}&amount_{$product_index}={$price}&quantity_{$product_index}={$product["quantity"]}{$option_fields}";
-            $total += $price * $product['quantity'];
-            $product_index++;
+            if($price > 0)
+            {
+                $fields .= "&item_name_{$product_index}={$name}&amount_{$product_index}={$price}&quantity_{$product_index}={$product["quantity"]}{$option_fields}";
+                $total += $price * $product['quantity'];
+                $product_index++;
+            }
+            else
+                $discount += abs($price) * $product['quantity'];
         }
+
+        if($discount > 0)
+            $fields .= "&discount_amount_cart={$discount}";
+
         $shipping = !empty($products["shipping"]["price"]) ? "&shipping_1={$products["shipping"]["price"]}" : "";
         $fields .= "{$shipping}&cmd=_cart&upload=1";
 
@@ -2622,8 +2670,153 @@ class GFPayPal {
         $folder = basename(dirname(__FILE__));
         return WP_PLUGIN_DIR . "/" . $folder;
     }
-}
 
+    public static function admin_edit_payment_status($payment_status, $form_id, $lead)
+    {
+		//allow the payment status to be edited when for paypal, not set to Approved, and not a subscription
+		$payment_gateway = gform_get_meta($lead["id"], "payment_gateway");
+		require_once(self::get_base_path() . "/data.php");
+		//get the transaction type out of the feed configuration, do not allow status to be changed when subscription
+		$paypal_feed_id = gform_get_meta($lead["id"], "paypal_feed_id");
+		$feed_config = GFPayPalData::get_feed($paypal_feed_id);
+		$transaction_type = rgars($feed_config, "meta/type");
+    	if ($payment_gateway <> "paypal" || strtolower(rgpost("save")) <> "edit" || $payment_status == "Approved" || $transaction_type == "subscription")
+    		return $payment_status;
+
+		//create drop down for payment status
+		$payment_string = gform_tooltip("paypal_edit_payment_status","",true);
+		$payment_string .= '<select id="payment_status" name="payment_status">';
+		$payment_string .= '<option value="' . $payment_status . '" selected>' . $payment_status . '</option>';
+		$payment_string .= '<option value="Approved">Approved</option>';
+		$payment_string .= '</select>';
+		return $payment_string;
+    }
+    public static function admin_edit_payment_status_details($form_id, $lead)
+    {
+		//check meta to see if this entry is paypal
+		$payment_gateway = gform_get_meta($lead["id"], "payment_gateway");
+		$form_action = strtolower(rgpost("save"));
+		if ($payment_gateway <> "paypal" || $form_action <> "edit")
+			return;
+
+		//get data from entry to pre-populate fields
+		$payment_amount = rgar($lead, "payment_amount");
+		if (empty($payment_amount))
+		{
+			$form = RGFormsModel::get_form($form_id);
+			$payment_amount = GFCommon::get_order_total($form,$lead);
+		}
+	  	$transaction_id = rgar($lead, "transaction_id");
+		$payment_date = rgar($lead, "payment_date");
+		if (empty($payment_date))
+		{
+			$payment_date = gmdate("y-m-d H:i:s");
+		}
+
+		//display edit fields
+		?>
+		<div id="edit_payment_status_details" style="display:block">
+			<table>
+				<tr>
+					<td colspan="2"><strong>Payment Information</strong></td>
+				</tr>
+
+				<tr>
+					<td>Date:<?php gform_tooltip("paypal_edit_payment_date") ?></td>
+					<td><input type="text" id="payment_date" name="payment_date" value="<?php echo $payment_date?>"></td>
+				</tr>
+				<tr>
+					<td>Amount:<?php gform_tooltip("paypal_edit_payment_amount") ?></td>
+					<td><input type="text" id="payment_amount" name="payment_amount" value="<?php echo $payment_amount?>"></td>
+				</tr>
+				<tr>
+					<td nowrap>Transaction ID:<?php gform_tooltip("paypal_edit_payment_transaction_id") ?></td>
+					<td><input type="text" id="paypal_transaction_id" name="paypal_transaction_id" value="<?php echo $transaction_id?>"></td>
+				</tr>
+			</table>
+		</div>
+		<?php
+	}
+
+	public static function admin_update_payment($form, $lead_id)
+	{
+		check_admin_referer('gforms_save_entry', 'gforms_save_entry');
+		//update payment information in admin, need to use this function so the lead data is updated before displayed in the sidebar info section
+		//check meta to see if this entry is paypal
+		$payment_gateway = gform_get_meta($lead_id, "payment_gateway");
+		$form_action = strtolower(rgpost("save"));
+		if ($payment_gateway <> "paypal" || $form_action <> "update")
+			return;
+		//get lead
+		$lead = RGFormsModel::get_lead($lead_id);
+		//get payment fields to update
+		$payment_status = rgpost("payment_status");
+		//when updating, payment status may not be editable, if no value in post, set to lead payment status
+		if (empty($payment_status))
+		{
+			$payment_status = $lead["payment_status"];
+		}
+
+		$payment_amount = rgpost("payment_amount");
+		$payment_transaction = rgpost("paypal_transaction_id");
+		$payment_date = rgpost("payment_date");
+		if (empty($payment_date))
+		{
+			$payment_date = gmdate("y-m-d H:i:s");
+		}
+		else
+		{
+			//format date entered by user
+			$payment_date = date("Y-m-d H:i:s", strtotime($payment_date));
+		}
+
+		global $current_user;
+		$user_id = 0;
+        $user_name = "System";
+        if($current_user && $user_data = get_userdata($current_user->ID)){
+            $user_id = $current_user->ID;
+            $user_name = $user_data->display_name;
+        }
+
+		$lead["payment_status"] = $payment_status;
+		$lead["payment_amount"] = $payment_amount;
+		$lead["payment_date"] =   $payment_date;
+		$lead["transaction_id"] = $payment_transaction;
+
+		// if payment status does not equal approved or the lead has already been fulfilled, do not continue with fulfillment
+        if($payment_status == 'Approved' && !$lead["is_fulfilled"])
+        {
+        	//call fulfill order, mark lead as fulfilled
+        	self::fulfill_order($lead, $payment_transaction, $payment_amount);
+        	$lead["is_fulfilled"] = true;
+		}
+		//update lead, add a note
+		RGFormsModel::update_lead($lead);
+		RGFormsModel::add_note($lead["id"], $user_id, $user_name, sprintf(__("Payment information was manually updated. Status: %s. Amount: %s. Transaction Id: %s. Date: %s", "gravityforms"), $lead["payment_status"], GFCommon::to_money($lead["payment_amount"], $lead["currency"]), $payment_transaction, $lead["payment_date"]));
+	}
+
+	function set_logging_supported($plugins)
+	{
+		$plugins[self::$slug] = "PayPal Payments Standard";
+		return $plugins;
+	}
+
+	private static function log_error($message){
+		if(class_exists("GFLogging"))
+		{
+			GFLogging::include_logger();
+			GFLogging::log_message(self::$slug, $message, KLogger::ERROR);
+		}
+	}
+
+	private static function log_debug($message){
+		if(class_exists("GFLogging"))
+		{
+			GFLogging::include_logger();
+			GFLogging::log_message(self::$slug, $message, KLogger::DEBUG);
+		}
+	}
+}
 
 if(!function_exists("rgget")){
 function rgget($name, $array=null){

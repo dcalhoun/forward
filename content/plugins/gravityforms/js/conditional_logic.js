@@ -238,7 +238,7 @@ function gf_reset_to_default(targetId, defaultValue){
         var isChecked = jQuery(this).is(':checked') ? true : false;
 
         //does input need to be marked as checked or unchecked?
-        var doCheck = jQuery.inArray(jQuery(this).attr('id'), defaultValue) > -1;
+        var doCheck = defaultValue ? jQuery.inArray(jQuery(this).attr('id'), defaultValue) > -1 : false;
 
         //if value changed, trigger click event
         if(isChecked != doCheck){

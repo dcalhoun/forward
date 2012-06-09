@@ -1,7 +1,7 @@
 <?php
 class GFCommon{
 
-    public static $version = "1.6.4.4.2";
+    public static $version = "1.6.4.5";
     public static $tab_index = 1;
 
     public static function get_selection_fields($form, $selected_field_id){
@@ -850,8 +850,8 @@ class GFCommon{
 
         $field_data = "";
         if($format == "html"){
-            $field_data = '<table width="99%" border="0" cellpadding="1" cellpsacing="0" bgcolor="#EAEAEA"><tr><td>
-                            <table width="100%" border="0" cellpadding="5" cellpsacing="0" bgcolor="#FFFFFF">';
+            $field_data = '<table width="99%" border="0" cellpadding="1" cellspacing="0" bgcolor="#EAEAEA"><tr><td>
+                            <table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF">';
         }
 
         $options_array = explode(",", $options);
@@ -4065,7 +4065,7 @@ class GFCommon{
             $product_info = apply_filters("gform_product_info_{$form["id"]}", apply_filters("gform_product_info", $product_info, $form, $lead), $form, $lead);
 
             // save static copy of product info (only for "real" entries)
-            if(!rgempty("id", $lead))
+            if(!rgempty("id", $lead) && !empty($product_info["products"]))
                 gform_update_meta($lead['id'], "gform_product_info_{$use_choice_text}_{$use_admin_label}", $product_info);
         }
 
@@ -4525,5 +4525,20 @@ class GFCommon{
         return in_array($input_type, $supported_input_types) && !in_array($input_type, $unsupported_field_types);
     }
 
+    public static function log_error($message){
+        if(class_exists("GFLogging"))
+        {
+            GFLogging::include_logger();
+            GFLogging::log_message("gravityforms", $message, KLogger::ERROR);
+        }
+    }
+
+    public static function log_debug($message){
+        if(class_exists("GFLogging"))
+        {
+            GFLogging::include_logger();
+            GFLogging::log_message("gravityforms", $message, KLogger::DEBUG);
+        }
+    }
 }
 ?>

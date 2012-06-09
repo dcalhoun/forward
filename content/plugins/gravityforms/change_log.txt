@@ -1,10 +1,14 @@
 -------------------------------------------------------------------------------------------------------------------
-Version 1.6.4.4.2
+Version 1.6.4.5
+    - Fixed issue with conditional logic on jQuery 1.6.1 under certain circumstances
+    - Fixed issue where required quantity on single, hidden and cacluation products did not accept "0"
+    - Added logging infrastructure and a few log messages around multi-page file upload
+    - Fixed issue where inputs did not have calc events bound to change event
+    - Fixed issue where required quantity on single, hidden and cacluation products did not accept "0"
+    - Fixed issue with input mask not properly clearing value when form was submitted via the Enter key.
+    - Fixed issue with gform_product_info being added to meta even on non-product forms
     - Fixed issue with default post category not being properly set
-    - updated "GFCommon::is_post_field()" to be a public method (for use in User Registration Add-on)
-
--------------------------------------------------------------------------------------------------------------------
-Version 1.6.4.4.1
+    - Updated "GFCommon::is_post_field()" to be a public method (for use in User Registration Add-on)
     - Fixed issue with number field failing validation when field was configured with commas for decimal separators
     - Fixed issue with calculation not supporting the field number format setting
 
