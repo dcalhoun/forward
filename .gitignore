@@ -4,3 +4,4 @@
 /db-sync
 /content/upgrade/
 .DS_Store
+.whiskey_disk_git_changes
