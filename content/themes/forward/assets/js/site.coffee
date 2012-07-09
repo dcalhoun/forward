@@ -4,9 +4,9 @@ mission_condensed = '<span class="black">This is no Sunday kind of church.</span
 $ ->
   $('.dropdown-toggle').dropdown()
   $('.alert').alert()
-  $('#wrapper-mission').click event, openMission
-  $('#close-mission').click event, closeMission
-  $('#featured-slides').find('img').click goToURL
+  $('#wrapper-mission').on 'click', openMission
+  $('#close-mission').on 'click', closeMission
+  $('#featured-slides').find('img').on 'click', goToURL
 
   $('.carousel').carouFredSel
     auto          : false
@@ -37,14 +37,14 @@ goToURL = () ->
   url = $(this).attr('data-url')
   window.location.href = url
 
-openMission = () ->
+openMission = (event) ->
   event.preventDefault()
   $(this).removeClass('closed').addClass('open')
   $('section#mission').animate({height: 275})
   # $('section#mission p').html(mission)
   $('#close-mission').fadeIn()
 
-closeMission = () ->
+closeMission = (event) ->
   event.preventDefault()
   $('#wrapper-mission').removeClass('open').addClass('closed')
   $('section#mission').animate({height: 35})
