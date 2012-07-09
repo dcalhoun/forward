@@ -1,4 +1,11 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 1.7
+	- Fixed issue with some Mapped Fields not being passed (Entry Date, User IP, Source Url, Form Title)
+    - Added new conditional logic options (greater than, less than, contains starts with, ends with) and support for other conditional fields
+    - Fixed notices
+    - Fixed issue when testing if email is already in the list
+
+------------------------------------------------------------------------------------------------------------------
 Version 1.6.3
     - Added logging
     - Fixed notices
