@@ -2,11 +2,8 @@
 // Variables to customize the look and feel of Bootstrap
 // -----------------------------------------------------
 
-
-
 // GLOBAL VALUES
 // --------------------------------------------------
-
 
 // Grays
 // -------------------------
@@ -29,6 +26,7 @@
 @orange:                #f89406;
 @pink:                  #c3325f;
 @purple:                #7a43b6;
+@forwardGreen:          #8BC758;
 
 
 // Scaffolding
@@ -39,8 +37,8 @@
 
 // Links
 // -------------------------
-@linkColor:             #08c;
-@linkColorHover:        darken(@linkColor, 15%);
+@linkColor:             @black;
+@linkColorHover:        lighten(@linkColor, 50%);
 
 
 // Typography
@@ -69,7 +67,7 @@
 @btnBackgroundHighlight:            darken(@white, 10%);
 @btnBorder:                         darken(@white, 20%);
 
-@btnPrimaryBackground:              @linkColor;
+@btnPrimaryBackground:              @forwardGreen;
 @btnPrimaryBackgroundHighlight:     spin(@btnPrimaryBackground, 15%);
 
 @btnInfoBackground:                 #5bc0de;

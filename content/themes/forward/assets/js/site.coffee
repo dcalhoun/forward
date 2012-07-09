@@ -6,14 +6,14 @@ $ ->
   $('.alert').alert()
   $('#wrapper-mission').click event, openMission
   $('#close-mission').click event, closeMission
-  $('#featured-slides img').click goToURL
+  $('#featured-slides').find('img').click goToURL
 
   $('.carousel').carouFredSel
     auto          : false
     align         : 'center'
     circular      : true
     items:
-      # height      : 266
+      height      : 266
       minimum     : 1
       visible:
         min       : 1

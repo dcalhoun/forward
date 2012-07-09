@@ -2,6 +2,27 @@
 // Snippets of reusable CSS to develop faster and keep code readable
 // -----------------------------------------------------------------
 
+// CUSTOM MIXINS
+// --------------------------------------------------
+
+.animate(@duration: .75s, @delay: .5s, @timing-function: ease, @fill-mode: both, @animation: fadeIn) {
+  -webkit-animation-duration: @duration;
+  -webkit-animation-delay: @delay;
+  -webkit-animation-timing-function: @timing-function;
+  -webkit-animation-fill-mode: @fill-mode;
+  -webkit-animation-name: @animation;
+  -moz-animation-duration: @duration;
+  -moz-animation-delay: @delay;
+  -moz-animation-timing-function: @timing-function;
+  -moz-animation-fill-mode: @fill-mode;
+  -moz-animation-name: @animation;
+  animation-duration: @duration;
+  animation-delay: @delay;
+  animation-timing-function: @timing-function;
+  animation-fill-mode: @fill-mode;
+  animation-name: @animation;
+}
+
 
 // UTILITY MIXINS
 // --------------------------------------------------
