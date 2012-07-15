@@ -18,31 +18,38 @@ Styling for default HTML elements.
 =============================================================================*/
 body {
   color: @grayLight;
-  font-size: 62.5%;
-  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
+  // font-size: 62.5%;
+  font-size: @baseFontSize;
+  font-family: @baseFontFamily;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   .animate();
 }
+
 a, a:visited {
 }
 a:hover, a:active {
   text-decoration: none;
 }
+
 p {
-  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+
   a, a:visited {
     color: @linkColor;
     font-weight: bold;
     .transition(color 0.4s ease-in-out);
   }
+
   a:hover, a:active {
     color: @linkColorHover;
     text-decoration: none;
   }
 }
+
 small { font-size: 80%; }
+
 h1 {
-/*  font-family: 'EB Garamond', Georgia, Times, serif;*/
   &.logo {
     background: url('../images/logo-forward.png') no-repeat 0 0;
     display: block;
@@ -50,9 +57,11 @@ h1 {
     text-indent: -9999px;
     width: 284px;
     .transition(opacity 0.3s ease-in-out);
+
     &:hover {
       opacity: 0.5;
     }
+
     a {
       display: block;
       height: 100%;
@@ -73,10 +82,15 @@ h1, h2, h3, h4 {
     color: @grayLight;
   }
 }
-/*::selection {
+
+::selection {
+  background: fadeOut(@forwardGreen, 50%);
+  color: darken(@forwardGreen, 25%);
 }
 ::-moz-selection {
-}*/
+  background: fadeOut(@forwardGreen, 50%);
+  color: darken(@forwardGreen, 25%);
+}
 /* @end */
 
 /* @group Library
@@ -181,7 +195,8 @@ nav.primary {
 
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
-  background: @grayLight;
+  background: @grayLighter;
+  color: @gray;
 }
 
 nav#social {

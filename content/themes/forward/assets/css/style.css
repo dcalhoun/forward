@@ -135,8 +135,8 @@ textarea {
 }
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+  font-size: 14px;
   line-height: 18px;
   color: #333333;
   background-color: #ffffff;
@@ -329,12 +329,12 @@ a:hover {
 }
 p {
   margin: 0 0 9px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+  font-size: 14px;
   line-height: 18px;
 }
 p small {
-  font-size: 11px;
+  font-size: 12px;
   color: #999999;
 }
 .lead {
@@ -535,7 +535,7 @@ code,
 pre {
   padding: 0 3px 2px;
   font-family: Menlo, Monaco, "Courier New", monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: #333333;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -551,7 +551,7 @@ pre {
   display: block;
   padding: 8.5px;
   margin: 0 0 9px;
-  font-size: 12.025px;
+  font-size: 12.950000000000001px;
   line-height: 18px;
   background-color: #f5f5f5;
   border: 1px solid #ccc;
@@ -590,7 +590,7 @@ legend {
   width: 100%;
   padding: 0;
   margin-bottom: 27px;
-  font-size: 19.5px;
+  font-size: 21px;
   line-height: 36px;
   color: #333333;
   border: 0;
@@ -605,7 +605,7 @@ input,
 button,
 select,
 textarea {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: normal;
   line-height: 18px;
 }
@@ -613,7 +613,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
 }
 label {
   display: block;
@@ -629,7 +629,7 @@ select,
   height: 18px;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px;
   color: #555555;
   border: 1px solid #cccccc;
@@ -1862,7 +1862,7 @@ table .span24 {
 .dropdown-menu .active > a:hover {
   color: #ffffff;
   text-decoration: none;
-  background-color: #000000;
+  background-color: #a6d47e;
 }
 .dropdown.open {
   *z-index: 1000;
@@ -1976,7 +1976,7 @@ table .span24 {
   *zoom: 1;
   padding: 4px 10px 4px;
   margin-bottom: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px;
   color: #333333;
   text-align: center;
@@ -2058,7 +2058,7 @@ table .span24 {
 }
 .btn-large {
   padding: 9px 14px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: normal;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -2069,7 +2069,7 @@ table .span24 {
 }
 .btn-small {
   padding: 5px 9px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 16px;
 }
 .btn-small [class^="icon-"] {
@@ -2077,7 +2077,7 @@ table .span24 {
 }
 .btn-mini {
   padding: 2px 6px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 14px;
 }
 .btn-primary,
@@ -3580,7 +3580,7 @@ a.thumbnail:hover {
 }
 .label {
   padding: 1px 4px 2px;
-  font-size: 10.998px;
+  font-size: 11.844px;
   font-weight: bold;
   line-height: 13px;
   color: #ffffff;
@@ -3628,7 +3628,7 @@ a.thumbnail:hover {
 }
 .badge {
   padding: 1px 9px 2px;
-  font-size: 12.025px;
+  font-size: 12.950000000000001px;
   font-weight: bold;
   white-space: nowrap;
   color: #ffffff;
@@ -4019,8 +4019,9 @@ Styling for default HTML elements.
 =============================================================================*/
 body {
   color: #999999;
-  font-size: 62.5%;
-  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -webkit-animation-duration: 0.75s;
   -webkit-animation-delay: 0.5s;
@@ -4043,7 +4044,7 @@ a:active {
   text-decoration: none;
 }
 p {
-  font: normal 14px/1.5 'PT Sans', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
 }
 p a,
 p a:visited {
@@ -4062,10 +4063,6 @@ p a:active {
 }
 small {
   font-size: 80%;
-}
-h1 {
-  /*  font-family: 'EB Garamond', Georgia, Times, serif;*/
-
 }
 h1.logo {
   background: url('../images/logo-forward.png') no-repeat 0 0;
@@ -4097,10 +4094,14 @@ h3 > a,
 h4 > a {
   color: #999999;
 }
-/*::selection {
+::selection {
+  background: rgba(139, 199, 88, 0.5);
+  color: #4d7728;
 }
 ::-moz-selection {
-}*/
+  background: rgba(139, 199, 88, 0.5);
+  color: #4d7728;
+}
 /* @end */
 /* @group Library
 =============================================================================
@@ -4211,7 +4212,7 @@ ul.gform_fields li {
   *zoom: 1;
   padding: 4px 10px 4px;
   margin-bottom: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px;
   color: #333333;
   text-align: center;
@@ -4299,7 +4300,8 @@ nav.primary {
 }
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
-  background: #999999;
+  background: #eeeeee;
+  color: #555555;
 }
 nav#social {
   margin-top: 30px;
