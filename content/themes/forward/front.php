@@ -65,7 +65,6 @@ get_header(); ?>
         <?php add_images($extra_images, $needed_images); ?>
       <?php else :?>
         <?php add_images($extra_images, $needed_images); ?>
-        <!-- <p class="empty-text">No slides to display</p> -->
       <?php endif; ?>
     </div>
     <a href="#" class="control next">Next</a>
