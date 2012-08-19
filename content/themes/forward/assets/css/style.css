@@ -4499,8 +4499,12 @@ section#mission p {
 .wrapper-carousel .carousel {
   width: 2000px;
 }
+.wrapper-carousel .carousel a {
+  display: block;
+  float: left;
+  margin: 0 1px;
+}
 .wrapper-carousel .carousel img {
-  cursor: pointer;
   display: block;
   float: left;
   margin: 0 1px;

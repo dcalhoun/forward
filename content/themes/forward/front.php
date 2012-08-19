@@ -44,10 +44,12 @@ get_header(); ?>
     <div id="featured-slides" class="carousel">
       <?php if ($slides->have_posts()) : ?>
         <?php while ($slides->have_posts()) : $slides->the_post(); ?>
-          <?php
-            $url = get_permalink();
-            the_post_thumbnail('slide', array('data-url' => $url));
-          ?>
+          <!-- <a href="#"> -->
+            <?php
+              $url = get_permalink();
+              the_post_thumbnail('slide', array('data-url' => $url));
+            ?>
+          <!-- </a> -->
         <?php endwhile; ?>
 
         <?php add_images($extra_images, $needed_images); ?>

@@ -3,7 +3,6 @@
   var goToURL;
 
   $(function() {
-    $('#featured-slides').find('img').on('click', goToURL);
     return $('.carousel').carouFredSel({
       auto: false,
       align: 'center',
@@ -12,7 +11,7 @@
         height: 266,
         minimum: 1,
         visible: {
-          min: 1,
+          min: 3,
           max: 3
         },
         width: 400

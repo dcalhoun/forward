@@ -1,7 +1,8 @@
 $ ->
-  $('#featured-slides').find('img').on 'click', goToURL
+  # $('#featured-slides').find('img').on 'click', goToURL
 
   $('.carousel').carouFredSel
+    # debug         : true
     auto          : false
     align         : 'center'
     circular      : true
@@ -9,7 +10,7 @@ $ ->
       height      : 266
       minimum     : 1
       visible:
-        min       : 1
+        min       : 3
         max       : 3
       width       : 400
     next:
