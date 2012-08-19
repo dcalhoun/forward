@@ -1083,6 +1083,12 @@ class RGFormsModel{
             $field_value = GFCommon::prepare_post_category_value($field_value, $source_field, "conditional_logic");
         }
 
+        if (!empty($field_value) && !is_array($field_value) && $source_field["type"] == "multiselect")
+        {
+			//convert the comma-delimited string into an array
+			$field_value = explode(",", $field_value);
+        }
+
         if(is_array($field_value)){
             foreach($field_value as $val){
                 if(self::matches_operation(GFCommon::get_selection_value($val), $target_value, $operation))
@@ -1280,12 +1286,10 @@ class RGFormsModel{
         }
         else if(rgar($field, "allowsPrepopulate")){
             return self::get_parameter_value($custom_name, $field_values, $field);
-
-
         }
     }
 
-    private static function get_parameter_value($name, $field_values, $field){
+    public static function get_parameter_value($name, $field_values, $field){
         $value = stripslashes(rgget($name));
         if(empty($value))
             $value = rgget($name, $field_values);
@@ -1566,7 +1570,7 @@ class RGFormsModel{
 
             case "number" :
                 $lead = empty($lead) ? RGFormsModel::get_lead($lead_id) : $lead;
-                $value = GFCommon::has_field_calculation($field) ? GFCommon::calculate($field, $form, $lead) : GFCommon::clean_number($value, rgar($field, "numberFormat"));
+                $value = GFCommon::has_field_calculation($field) ? GFCommon::round_number(GFCommon::calculate($field, $form, $lead), rgar($field, "calculationRounding")) : GFCommon::clean_number($value, rgar($field, "numberFormat"));
             break;
 
             case "website" :
@@ -2441,7 +2445,7 @@ class RGFormsModel{
     public static function get_leads($form_id, $sort_field_number=0, $sort_direction='DESC', $search='', $offset=0, $page_size=30, $star=null, $read=null, $is_numeric_sort = false, $start_date=null, $end_date=null, $status='active'){
         global $wpdb;
 
-        if($sort_field_number == 0)
+        if(empty($sort_field_number))
             $sort_field_number = "date_created";
 
         if(is_numeric($sort_field_number))

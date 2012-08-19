@@ -76,6 +76,8 @@ class GFFormDetail{
                 "formDescription" : "<?php _e("We would love to hear from you! Please fill out this form and we will get in touch with you shortly.", "gravityforms"); ?>",
                 "formConfirmationMessage" : "<?php _e("Thanks for contacting us! We will get in touch with you shortly.", "gravityforms"); ?>",
                 "buttonText" : "<?php _e("Submit", "gravityforms"); ?>",
+                /*"showValues" : "<?php _e("show values", "gravityforms"); ?>",
+                "hideValues" : "<?php _e(" hide values", "gravityforms"); ?>",*/
                 "loading" : "<?php _e("Loading...", "gravityforms"); ?>"
             };
         </script>
@@ -94,7 +96,7 @@ class GFFormDetail{
         <script type="text/javascript">
             jQuery(document).ready(
                 function() {
-                    jQuery('.datepicker').datepicker({showOn: "both", buttonImage: "<?php echo GFCommon::get_base_url() ?>/images/calendar.png", buttonImageOnly: true});
+                    jQuery('.datepicker').datepicker({showOn: "both", buttonImage: "<?php echo GFCommon::get_base_url() ?>/images/calendar.png", buttonImageOnly: true} );
                 }
             );
 
@@ -680,6 +682,7 @@ class GFFormDetail{
                     $description_class = rgar($form,"descriptionPlacement") == "above" ? "description_above" : "description_below";
                     ?>
                     <ul id="gform_fields" class="<?php echo rgar($form,"labelPlacement"). " " . $description_class ?>" style="position: relative;">
+
                         <?php
                         if(is_array($form["fields"]))
                         {
@@ -1577,7 +1580,7 @@ class GFFormDetail{
                             <li class="choices_setting field_setting">
                                 <div style="float:right;">
                                     <input type="checkbox" id="field_choice_values_enabled" onclick="SetFieldProperty('enableChoiceValue', this.checked); ToggleChoiceValue(); SetFieldChoices();"/>
-                                    <label for="field_choice_values_enabled" class="inline"><?php _e("enable values", "gravityforms") ?><?php gform_tooltip("form_field_choice_values") ?></label>
+                                    <label for="field_choice_values_enabled" class="inline gfield_value_label"><?php _e("show values", "gravityforms") ?></label>
                                 </div>
                                 <?php _e("Choices", "gravityforms"); ?> <?php gform_tooltip("form_field_choices") ?><br />
 
@@ -2359,8 +2362,8 @@ class GFFormDetail{
             </tr>
         </table>
         <script type="text/javascript">
-            jQuery("#chooser_<?php echo $field_name ?>").click(function(e){iColorShow(e.pageX, e.pageY, '<?php echo $field_name ?>', "<?php echo $callback ?>");});
-            jQuery("#chip_<?php echo $field_name ?>").click(function(e){iColorShow(e.pageX, e.pageY, '<?php echo $field_name ?>', "<?php echo $callback ?>");});
+            jQuery("#chooser_<?php echo $field_name ?>").click(function(e){iColorShow(e.pageX, e.pageY, '<?php echo $field_name ?>', "<?php echo $callback ?>");} );
+            jQuery("#chip_<?php echo $field_name ?>").click(function(e){iColorShow(e.pageX, e.pageY, '<?php echo $field_name ?>', "<?php echo $callback ?>");} );
         </script>
         <?php
     }

@@ -3,8 +3,8 @@
 Plugin Name: Gravity Forms
 Plugin URI: http://www.gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 1.6.4.5
-Author: Rocketgenius Inc.
+Version: 1.6.5.1
+Author: rocketgenius
 Author URI: http://www.rocketgenius.com
 
 ------------------------------------------------------------------------
@@ -209,8 +209,13 @@ class RGForms{
 
         $form_id = isset($_POST["gform_submit"]) ? $_POST["gform_submit"] : 0;
         if($form_id){
-            require_once(GFCommon::get_base_path() . "/form_display.php");
-            GFFormDisplay::process_form($form_id);
+            $form_info = RGFormsModel::get_form($form_id);
+            $is_valid_form = $form_info && $form_info->is_active;
+
+            if($is_valid_form){
+                require_once(GFCommon::get_base_path() . "/form_display.php");
+                GFFormDisplay::process_form($form_id);
+            }
         }
     }
 
@@ -628,7 +633,7 @@ class RGForms{
         if(!empty($wpdb->last_error))
             $has_permission = false;
 
-        $sql = "ALTER TABLE {$wpdb->prefix}rg_test ADD COLUMN " . uniqid() ." int";
+        $sql = "ALTER TABLE {$wpdb->prefix}rg_test ADD COLUMN a" . uniqid() ." int";
         $wpdb->query($sql);
         $error = "Current database user does not have necessary permissions to modify (ALTER) tables.";
         if(!empty($wpdb->last_error))
@@ -838,34 +843,40 @@ class RGForms{
              'field_values' => "",
              'ajax' => false,
              'tabindex' => 1,
-             'action' => false
+             'action' => 'form'
           ), $attributes));
 
-        if($action) {
+        $shortcode_string = "";
 
-            switch($action) {
+        switch($action) {
             case 'conditional':
-                return GFCommon::conditional_shortcode($attributes, $content);
-                break;
-            }
+                $shortcode_string = GFCommon::conditional_shortcode($attributes, $content);
+            break;
 
+            case 'form' :
+                //displaying form
+                $title = strtolower($title) == "false" ? false : true;
+                $description = strtolower($description) == "false" ? false : true;
+                $field_values = htmlspecialchars_decode($field_values);
+                $field_values = str_replace("&#038;", "&", $field_values);
+
+                $ajax = strtolower($ajax) == "true" ? true : false;
+
+                //using name to lookup form if id is not specified
+                if(empty($id))
+                    $id = $name;
+
+                parse_str($field_values, $field_value_array); //parsing query string like string for field values and placing them into an associative array
+                $field_value_array = stripslashes_deep($field_value_array);
+
+                $shortcode_string = self::get_form($id, $title, $description, false, $field_value_array, $ajax, $tabindex);
+
+            break;
         }
 
-        $title = strtolower($title) == "false" ? false : true;
-        $description = strtolower($description) == "false" ? false : true;
-        $field_values = htmlspecialchars_decode($field_values);
-        $field_values = str_replace("&#038;", "&", $field_values);
+        $shortcode_string = apply_filters("gform_shortcode_{$action}", $shortcode_string, $attributes, $content);
 
-        $ajax = strtolower($ajax) == "true" ? true : false;
-
-        //using name to lookup form if id is not specified
-        if(empty($id))
-            $id = $name;
-
-        parse_str($field_values, $field_value_array); //parsing query string like string for field values and placing them into an associative array
-        $field_value_array = stripslashes_deep($field_value_array);
-
-        return self::get_form($id, $title, $description, false, $field_value_array, $ajax, $tabindex);
+        return $shortcode_string;
     }
 
     //-------------------------------------------------
