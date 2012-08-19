@@ -10,7 +10,7 @@
 get_header(); ?>
 
   <div class="row">
-    <section class="primary span6 offset3" role="main">
+    <section class="primary span12" role="main">
 
       <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
@@ -25,7 +25,7 @@ get_header(); ?>
       </article>
       <?php endwhile; endif; ?>
 
-      <?php comments_template( '', true ); ?>
+      <?php //comments_template( '', true ); ?>
 
     </section>
   </div> <!-- /.row -->

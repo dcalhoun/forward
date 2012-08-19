@@ -72,6 +72,7 @@ h1 {
       width: 100%;
     }
   }
+
   &.entry-title {
     margin-bottom: 15px;
     text-align: center;
@@ -84,6 +85,9 @@ h3 {
 h1, h2, h3, h4 {
   > a {
     color: @grayLight;
+  }
+  > a:hover {
+    color: darken(@grayLight, 15%);
   }
 }
 
@@ -305,11 +309,18 @@ section.primary {
   border-bottom: 1px solid @grayLighter;
   margin-bottom: 60px;
   padding-bottom: 60px;
+  text-align: center;
+
   p {
+    margin-left: auto;
+    margin-right: auto;
     text-align: justify;
+    width: 75%;
   }
+
   .attachment-feature {
-    margin-left: -32%;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 40px;
   }
 }

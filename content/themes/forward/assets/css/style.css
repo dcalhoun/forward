@@ -4104,6 +4104,12 @@ h3 > a,
 h4 > a {
   color: #999999;
 }
+h1 > a:hover,
+h2 > a:hover,
+h3 > a:hover,
+h4 > a:hover {
+  color: #737373;
+}
 ::selection {
   background: rgba(139, 199, 88, 0.5);
   color: #4d7728;
@@ -4415,12 +4421,17 @@ section.primary {
   border-bottom: 1px solid #eeeeee;
   margin-bottom: 60px;
   padding-bottom: 60px;
+  text-align: center;
 }
 .post p {
+  margin-left: auto;
+  margin-right: auto;
   text-align: justify;
+  width: 75%;
 }
 .post .attachment-feature {
-  margin-left: -32%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 40px;
 }
 .pagination ol {

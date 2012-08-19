@@ -10,7 +10,7 @@
 get_header(); ?>
 
   <div class="row">
-    <section class="primary span8 offset2" role="main">
+    <section class="primary span12" role="main">
 
       <?php if (have_posts()) : ?>
         <?php while (have_posts()) : the_post(); ?>
