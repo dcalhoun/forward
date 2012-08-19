@@ -12,17 +12,21 @@ get_header(); ?>
   <div class="row">
     <section class="primary span8 offset2" role="main">
 
-      <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-        <article id="post-<?php the_ID(); ?>" class="post">
-          <h1 class="entry-title">
-            <a href="<?php the_permalink(); ?>"><?php the_title();?></a>
-          </h1>
+      <?php if (have_posts()) : ?>
+        <?php while (have_posts()) : the_post(); ?>
+          <article id="post-<?php the_ID(); ?>" class="post">
+            <h1 class="entry-title">
+              <a href="<?php the_permalink(); ?>"><?php the_title();?></a>
+            </h1>
 
-          <div class="entry-text">
-            <?php the_content(); ?>
-          </div>
-        </article>
-      <?php endwhile; endif; ?>
+            <div class="entry-text">
+              <?php the_content(); ?>
+            </div>
+          </article>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p class="empty-text">No posts to display</p>
+      <?php endif; ?>
 
       <?php //echo paginate_links() ?>
       <?php //echo next_post_link(); ?>

@@ -12,12 +12,10 @@ get_header(); ?>
   <div class="row">
     <section class="primary span8 offset2" role="main">
       <article id="post-<?php the_ID(); ?>">
-        <h1>Not found.</h1>
+        <h1 class="entry-title">Whoops...</h1>
 
         <div class="entry-text">
-          <p>It seems we can't find what you are looking for. Perhaps try searching?</p>
-
-          <?php get_search_form(); ?>
+          <p class="text-center">It seems we can't find what you are looking for &mdash; terribly sorry about that. &#9785;</p>
         </div>
       </article>
     </section>
