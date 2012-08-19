@@ -16,9 +16,12 @@
 =============================================================================
 Styling for default HTML elements.
 =============================================================================*/
+html, body {
+  width: 100%;
+}
+
 body {
   color: @grayLight;
-  // font-size: 62.5%;
   font-size: @baseFontSize;
   font-family: @baseFontFamily;
   line-height: 1.5;
@@ -51,11 +54,12 @@ small { font-size: 80%; }
 
 h1 {
   &.logo {
-    background: url('../images/logo-forward.png') no-repeat 0 0;
+    .at2x('../images/logo-forward.png', 240px, 83px);
+    // background: url('../images/logo-forward.png') no-repeat 0 0;
     display: block;
-    height: 98px;
+    height: 83px;
     text-indent: -9999px;
-    width: 284px;
+    width: 240px;
     .transition(opacity 0.3s ease-in-out);
 
     &:hover {
@@ -111,29 +115,25 @@ ul.horz li { display: inline-block; }
   font-family: Pictos;
 }
 
-.no-touch .wrapper-carousel:hover .control {
-  opacity: 1.0;
-}
-
 .control {
-  background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
+  .at2x('../images/btn-carousel.png', auto, 57px);
+  // background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
   display: block;
   height: 57px;
-  opacity: 0;
+  opacity: 0.75;
   position: absolute;
-  top: 36%;
+  top: 38%;
   width: 57px;
   z-index: 2;
-  .transition(opacity 0.4s ease-in-out);
   .hide-text();
 
   &.prev {
-    left: 15px;
+    left: 20px;
   }
 
   &.next {
     background-position: -58px 0;
-    right: 15px;
+    right: 20px;
   }
 }
 
@@ -143,6 +143,12 @@ ul.horz li { display: inline-block; }
   letter-spacing: 0.3em;
   text-align: center;
   text-transform: uppercase;
+}
+
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover {
+  background: @grayLighter;
+  color: @gray;
 }
 
 /* @group Forms */
@@ -188,51 +194,102 @@ ul.gform_fields {
 =============================================================================
 Styling for structure of the site.
 =============================================================================*/
-.container {
-}
-header.primary {
-  padding: 20px 0;
+#wrapper-header {
+  margin-bottom: 10px;
 }
 
-nav.primary {
-  margin-top: 51px;
+#header-primary {
+  padding: 25px 0 15px 0;
 }
 
-.nav-pills > .active > a,
-.nav-pills > .active > a:hover {
-  background: @grayLighter;
-  color: @gray;
+.wrapper-nav-primary {
+  .at2x('../images/bg-cross.png', 6px, 6px);
+  background-color: @green;
+  .box-shadow(inset 0 0 6px fadeOut(@black, 50%));
+  margin-bottom: 45px;
 }
 
-nav#social {
+#nav-primary {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+
+  ul {
+    margin: 0;
+  }
+
+  li {
+    display: inline-block;
+    list-style: none;
+    margin-right: -4px;
+
+    &:first-child {
+      border-left: 1px solid fadeOut(@black, 65%);
+    }
+
+    &:last-child {
+      border-right: 1px solid fadeOut(@white, 70%);
+    }
+
+    &.current-menu-item a {
+      background-color: fadeOut(@black, 90%);
+    }
+  }
+
+  a {
+    border-right: 1px solid fadeOut(@black, 65%);
+    border-left: 1px solid fadeOut(@white, 70%);
+    color: @white;
+    display: block;
+    padding: 12px 34px;
+    text-shadow: 1px 1px 2px fadeOut(@black, 60%);
+    .transition(background 0.4s ease-out);
+
+    &:hover {
+      background-color: fadeOut(@black, 90%);
+    }
+  }
+}
+
+#nav-social {
   margin-top: 30px;
   text-align: right;
+
   ul {
     margin: 0 0 15px 0;
+
     li {
       margin-left: 5px;
+
       a {
-        background: url('../images/icon-social.png') no-repeat 0 0;
+        .at2x('../images/icon-social.png', 69px, auto);
+        background-repeat: no-repeat;
         display: block;
         height: 30px;
         text-align: left;
         text-indent: -9999px;
         width: 30px;
         .transition(opacity 0.3s ease-in-out);
+
         &:hover {
           opacity: 0.5;
         }
       }
+
       &.facebook a {
         background-position: -39px 0;
       }
     }
   }
+
   .schedule {
     display: block;
     margin-top: 10px;
+
     a {
       background: none;
+      color: @grayDark;
+      display: inline;
       text-align: right;
       text-indent: 0;
       width: auto;
@@ -264,8 +321,13 @@ section.primary {
 aside.primary {
 }
 
-footer.primary {
+#footer-primary {
+  margin-top: 30px;
   margin-bottom: 30px;
+
+  p {
+    font-size: 13px;
+  }
 }
 /* @end */
 
@@ -279,16 +341,20 @@ Styling for page-specific elements.
   margin-bottom: 50px;
   padding: 15px 0;
   .transition(background-color 0.4s ease-in-out);
+
   &:hover {
     background: darken(@grayLighter, 7%);
   }
+
   &.closed {
     cursor: pointer;
   }
+
   &.open {
     section#mission {
       color: @grayDark;
     }
+
     &:hover {
       background: @grayLighter;
     }
@@ -299,6 +365,7 @@ section#mission {
   height: 35px;
   position: relative;
   overflow: hidden;
+
   p {
     font: 100 italic 20px/2.0 Georgia, Times, serif;
     margin-bottom: 0;
@@ -312,17 +379,20 @@ section#mission {
   right: 16px;
   top: 137px;
 }
+
 .admin-bar #close-mission {
   top: 165px;
 }
 
 .wrapper-carousel {
-  overflow: hidden;
-  margin: 0 0 50px 0;
+  // overflow: hidden;
+  margin: 0 0 0 0;
   position: relative;
   width: 100%;
+
   .carousel {
     width: 2000px;
+
     img {
       cursor: pointer;
       display: block;
@@ -336,6 +406,7 @@ section#mission {
       .desaturate(0);
     }
   }
+
   .empty-text {
     margin-top: 30px;
     margin-bottom: 20px;
@@ -344,26 +415,33 @@ section#mission {
 
 #send-me,
 #two-forty-two {
-  display: block;
-  margin: 0 auto;
+  background-repeat: no-repeat;
+  display: inline-block;
   .hide-text();
 }
+
 #send-me {
-  background: url('../images/logo-send-me.png') no-repeat 0 0;
+  .at2x('../images/logo-send-me.png', 160px, auto);
   height: 86px;
+  margin-left: 65px;
   width: 160px;
+
   &:hover {
     background-position: 0 -87px;
   }
 }
+
 #two-forty-two {
-  background: url('../images/logo-242.png') no-repeat 0 0;
+  .at2x('../images/logo-242.png', 101px, auto);
   height: 188px;
+  margin-left: 95px;
   width: 101px;
+
   &:hover {
     background-position: 0 -191px;
   }
 }
+
 #welcome,
 #send-me {
   margin-top: 35px;
@@ -371,11 +449,7 @@ section#mission {
 
 #welcome p {
   line-height: 2.0;
-}
-/* @end */
-
-/* @group List Page */
-.list {
+  text-align: justify;
 }
 /* @end */
 /* @end */
@@ -386,99 +460,77 @@ Styling for a range of screen sizes.
 =============================================================================*/
 /* Up to landscape phone */
 @media (max-width: 480px) {
+  // h1.logo {
+  //   margin-right: auto;
+  //   margin-left: auto;
+  // }
 
+  // .nav-pills {
+  //   background: @grayLighter;
+  //   > li {
+  //     width: 50%;
+  //     > a {
+  //       font-size: 20px;
+  //       padding: 20px 0;
+  //       width: 100%;
+  //       .border-radius(0);
+  //     }
+  //   }
+  // }
 
-  h1.logo {
-    margin-right: auto;
-    margin-left: auto;
-  }
+  // .dropdown-menu {
+  //   a {
+  //     font-size: 16px;
+  //     padding: 8px 15px;
+  //   }
+  // }
 
-  .nav-pills {
-    background: @grayLighter;
-    > li {
-      width: 50%;
-      > a {
-        font-size: 20px;
-        padding: 20px 0;
-        width: 100%;
-        .border-radius(0);
-      }
-    }
-  }
-
-  .dropdown-menu {
-    a {
-      font-size: 16px;
-      padding: 8px 15px;
-    }
-  }
-
-  nav#social {
-    text-align: center;
-  }
-
+  // nav#social {
+  //   text-align: center;
+  // }
 }
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
-  h1.logo {
-    background-size: 225px 75px;
-    height: 75px;
-    width: 225px;
-  }
+  // nav#social {
+  //   .schedule {
+  //     a {
+  //       font-size: 12px;
+  //       text-align: center;
+  //     }
+  //   }
+  // }
 
-/*  nav.primary {
-    > ul {
-      text-align: center;
-      > li {
-        display: inline-block;
-        float: none;
-      }
-    }
-    ul.dropdown-menu {
-      text-align: left;
-    }
-  }*/
+  // .wrapper-carousel {
+  //   margin-bottom: 0px;
+  // }
 
-  nav#social {
-    .schedule {
-      a {
-        font-size: 12px;
-        text-align: center;
-      }
-    }
-  }
+  // section.primary {
+  //   margin-bottom: 0;
+  //   > [class*="span"] {
+  //     .clearfix();
+  //   }
+  // }
 
-  .wrapper-carousel {
-    margin-bottom: 0px;
-  }
+  // #wrapper-mission {
+  //   padding: 10px 0;
+  // }
 
-  section.primary {
-    margin-bottom: 0;
-    > [class*="span"] {
-      .clearfix();
-    }
-  }
+  // section#mission {
+  //   p {
+  //     font-size: 16px;
+  //   }
+  // }
 
-  #wrapper-mission {
-    padding: 10px 0;
-  }
-
-  section#mission {
-    p {
-      font-size: 16px;
-    }
-  }
-
-  #welcome {
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  #send-me,
-  #two-forty-two {
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
+  // #welcome {
+  //   margin-top: 10px;
+  //   margin-bottom: 20px;
+  // }
+  // #send-me,
+  // #two-forty-two {
+  //   margin-top: 50px;
+  //   margin-bottom: 50px;
+  // }
 }
 
 /* Portrait tablet to default desktop */
@@ -487,25 +539,10 @@ Styling for a range of screen sizes.
 
 /* Tablets and below */
 @media (max-width: 980px) {
-  body,
-  #wrapper-header {
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
 }
 
 /* Large desktop and up */
 @media (min-width: 1200px) {
-  .post {
-    .attachment-feature {
-      margin-left: -20%;
-    }
-  }
 }
 /* @end */
 
@@ -513,7 +550,4 @@ Styling for a range of screen sizes.
 =============================================================================
 Styling and fixes for legacy browsers.
 =============================================================================*/
-.no-cssgradient {
-  /* fix me! */
-}
 /* @end */

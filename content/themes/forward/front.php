@@ -29,18 +29,6 @@ get_header(); ?>
   }
 ?>
 
-  <a href="#" id="close-mission" class="pictos alignright mhide">D</a>
-
-  <div id="wrapper-mission" class="closed hidden-phone">
-    <div class="container">
-      <section id="mission" class="row">
-        <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-          <p class="span12"><?php echo get_post_meta($post->ID, 'mission', true); ?></p>
-        <?php endwhile; endif; ?>
-      </section>
-    </div>
-  </div>
-
   <div class="wrapper-carousel">
     <?php
       $args = array(
@@ -78,11 +66,8 @@ get_header(); ?>
         <?php endwhile; endif; ?>
       </div>
 
-      <div class="span3">
+      <div class="span6">
         <a href="<?php echo get_permalink(24); ?>" id="send-me">Send Me</a>
-      </div>
-
-      <div class="span3">
         <a href="<?php echo get_permalink(18); ?>" id="two-forty-two">2/42</a>
       </div>
     </section>

@@ -142,11 +142,11 @@ body {
   background-color: #ffffff;
 }
 a {
-  color: #000000;
+  color: #85bd59;
   text-decoration: none;
 }
 a:hover {
-  color: #808080;
+  color: #609039;
   text-decoration: underline;
 }
 .row {
@@ -1041,8 +1041,8 @@ select:focus:required:invalid:focus {
 }
 .input-prepend .active,
 .input-append .active {
-  background-color: #a9dba9;
-  border-color: #46a546;
+  background-color: #d5e9c6;
+  border-color: #85bd59;
 }
 .input-prepend .add-on,
 .input-prepend .btn {
@@ -2524,7 +2524,7 @@ input[type="submit"].btn.btn-mini {
 .nav-list > .active > a:hover {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background-color: #000000;
+  background-color: #85bd59;
 }
 .nav-list [class^="icon-"] {
   margin-right: 2px;
@@ -2603,7 +2603,7 @@ input[type="submit"].btn.btn-mini {
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
   color: #ffffff;
-  background-color: #000000;
+  background-color: #85bd59;
 }
 .nav-stacked > li {
   float: none;
@@ -2652,14 +2652,14 @@ input[type="submit"].btn.btn-mini {
 }
 .nav-tabs .dropdown-toggle .caret,
 .nav-pills .dropdown-toggle .caret {
-  border-top-color: #000000;
-  border-bottom-color: #000000;
+  border-top-color: #85bd59;
+  border-bottom-color: #85bd59;
   margin-top: 6px;
 }
 .nav-tabs .dropdown-toggle:hover .caret,
 .nav-pills .dropdown-toggle:hover .caret {
-  border-top-color: #808080;
-  border-bottom-color: #808080;
+  border-top-color: #609039;
+  border-bottom-color: #609039;
 }
 .nav-tabs .active .dropdown-toggle .caret,
 .nav-pills .active .dropdown-toggle .caret {
@@ -3564,7 +3564,7 @@ input[type="submit"].btn.btn-mini {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 a.thumbnail:hover {
-  border-color: #000000;
+  border-color: #85bd59;
   -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
@@ -4017,6 +4017,10 @@ a.thumbnail:hover {
 =============================================================================
 Styling for default HTML elements.
 =============================================================================*/
+html,
+body {
+  width: 100%;
+}
 body {
   color: #999999;
   font-size: 14px;
@@ -4048,7 +4052,7 @@ p {
 }
 p a,
 p a:visited {
-  color: #000000;
+  color: #85bd59;
   font-weight: bold;
   -webkit-transition: color 0.4s ease-in-out;
   -moz-transition: color 0.4s ease-in-out;
@@ -4058,23 +4062,29 @@ p a:visited {
 }
 p a:hover,
 p a:active {
-  color: #808080;
+  color: #609039;
   text-decoration: none;
 }
 small {
   font-size: 80%;
 }
 h1.logo {
-  background: url('../images/logo-forward.png') no-repeat 0 0;
+  background-image: url('../images/logo-forward.png');
   display: block;
-  height: 98px;
+  height: 83px;
   text-indent: -9999px;
-  width: 284px;
+  width: 240px;
   -webkit-transition: opacity 0.3s ease-in-out;
   -moz-transition: opacity 0.3s ease-in-out;
   -ms-transition: opacity 0.3s ease-in-out;
   -o-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
+}
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  h1.logo {
+    background-image: url('../images/logo-forward@2x.png');
+    background-size: 240px 83px;
+  }
 }
 h1.logo:hover {
   opacity: 0.5;
@@ -4144,33 +4154,31 @@ ul.horz li {
 .pictos {
   font-family: Pictos;
 }
-.no-touch .wrapper-carousel:hover .control {
-  opacity: 1.0;
-}
 .control {
-  background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
+  background-image: url('../images/btn-carousel.png');
   display: block;
   height: 57px;
-  opacity: 0;
+  opacity: 0.75;
   position: absolute;
-  top: 36%;
+  top: 38%;
   width: 57px;
   z-index: 2;
-  -webkit-transition: opacity 0.4s ease-in-out;
-  -moz-transition: opacity 0.4s ease-in-out;
-  -ms-transition: opacity 0.4s ease-in-out;
-  -o-transition: opacity 0.4s ease-in-out;
-  transition: opacity 0.4s ease-in-out;
   overflow: hidden;
   text-indent: 100%;
   white-space: nowrap;
 }
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  .control {
+    background-image: url('../images/btn-carousel@2x.png');
+    background-size: auto 57px;
+  }
+}
 .control.prev {
-  left: 15px;
+  left: 20px;
 }
 .control.next {
   background-position: -58px 0;
-  right: 15px;
+  right: 20px;
 }
 .empty-text {
   color: #cccccc;
@@ -4178,6 +4186,11 @@ ul.horz li {
   letter-spacing: 0.3em;
   text-align: center;
   text-transform: uppercase;
+}
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover {
+  background: #eeeeee;
+  color: #555555;
 }
 /* @group Forms */
 ul.gform_fields {
@@ -4225,11 +4238,8 @@ ul.gform_fields li {
   background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: linear-gradient(top, #ffffff, #e6e6e6);
-  background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
   border: 1px solid #cccccc;
   border-bottom-color: #b3b3b3;
   -webkit-border-radius: 4px;
@@ -4292,29 +4302,77 @@ ul.gform_fields li {
 =============================================================================
 Styling for structure of the site.
 =============================================================================*/
-header.primary {
-  padding: 20px 0;
+#wrapper-header {
+  margin-bottom: 10px;
 }
-nav.primary {
-  margin-top: 51px;
+#header-primary {
+  padding: 25px 0 15px 0;
 }
-.nav-pills > .active > a,
-.nav-pills > .active > a:hover {
-  background: #eeeeee;
-  color: #555555;
+.wrapper-nav-primary {
+  background-image: url('../images/bg-cross.png');
+  background-color: #85bd59;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  margin-bottom: 45px;
 }
-nav#social {
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  .wrapper-nav-primary {
+    background-image: url('../images/bg-cross@2x.png');
+    background-size: 6px 6px;
+  }
+}
+#nav-primary {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+#nav-primary ul {
+  margin: 0;
+}
+#nav-primary li {
+  display: inline-block;
+  list-style: none;
+  margin-right: -4px;
+}
+#nav-primary li:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.35);
+}
+#nav-primary li:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.30000000000000004);
+}
+#nav-primary li.current-menu-item a {
+  background-color: rgba(0, 0, 0, 0.09999999999999998);
+}
+#nav-primary a {
+  border-right: 1px solid rgba(0, 0, 0, 0.35);
+  border-left: 1px solid rgba(255, 255, 255, 0.30000000000000004);
+  color: #ffffff;
+  display: block;
+  padding: 12px 34px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-transition: background 0.4s ease-out;
+  -moz-transition: background 0.4s ease-out;
+  -ms-transition: background 0.4s ease-out;
+  -o-transition: background 0.4s ease-out;
+  transition: background 0.4s ease-out;
+}
+#nav-primary a:hover {
+  background-color: rgba(0, 0, 0, 0.09999999999999998);
+}
+#nav-social {
   margin-top: 30px;
   text-align: right;
 }
-nav#social ul {
+#nav-social ul {
   margin: 0 0 15px 0;
 }
-nav#social ul li {
+#nav-social ul li {
   margin-left: 5px;
 }
-nav#social ul li a {
-  background: url('../images/icon-social.png') no-repeat 0 0;
+#nav-social ul li a {
+  background-image: url('../images/icon-social.png');
+  background-repeat: no-repeat;
   display: block;
   height: 30px;
   text-align: left;
@@ -4326,18 +4384,26 @@ nav#social ul li a {
   -o-transition: opacity 0.3s ease-in-out;
   transition: opacity 0.3s ease-in-out;
 }
-nav#social ul li a:hover {
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  #nav-social ul li a {
+    background-image: url('../images/icon-social@2x.png');
+    background-size: 69px auto;
+  }
+}
+#nav-social ul li a:hover {
   opacity: 0.5;
 }
-nav#social ul li.facebook a {
+#nav-social ul li.facebook a {
   background-position: -39px 0;
 }
-nav#social .schedule {
+#nav-social .schedule {
   display: block;
   margin-top: 10px;
 }
-nav#social .schedule a {
+#nav-social .schedule a {
   background: none;
+  color: #333333;
+  display: inline;
   text-align: right;
   text-indent: 0;
   width: auto;
@@ -4360,8 +4426,12 @@ section.primary {
 .pagination ol {
   display: inline-block;
 }
-footer.primary {
+#footer-primary {
+  margin-top: 30px;
   margin-bottom: 30px;
+}
+#footer-primary p {
+  font-size: 13px;
 }
 /* @end */
 /* @group Page Styles
@@ -4411,8 +4481,7 @@ section#mission p {
   top: 165px;
 }
 .wrapper-carousel {
-  overflow: hidden;
-  margin: 0 0 50px 0;
+  margin: 0 0 0 0;
   position: relative;
   width: 100%;
 }
@@ -4448,24 +4517,38 @@ section#mission p {
 }
 #send-me,
 #two-forty-two {
-  display: block;
-  margin: 0 auto;
+  background-repeat: no-repeat;
+  display: inline-block;
   overflow: hidden;
   text-indent: 100%;
   white-space: nowrap;
 }
 #send-me {
-  background: url('../images/logo-send-me.png') no-repeat 0 0;
+  background-image: url('../images/logo-send-me.png');
   height: 86px;
+  margin-left: 65px;
   width: 160px;
+}
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  #send-me {
+    background-image: url('../images/logo-send-me@2x.png');
+    background-size: 160px auto;
+  }
 }
 #send-me:hover {
   background-position: 0 -87px;
 }
 #two-forty-two {
-  background: url('../images/logo-242.png') no-repeat 0 0;
+  background-image: url('../images/logo-242.png');
   height: 188px;
+  margin-left: 95px;
   width: 101px;
+}
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  #two-forty-two {
+    background-image: url('../images/logo-242@2x.png');
+    background-size: 101px auto;
+  }
 }
 #two-forty-two:hover {
   background-position: 0 -191px;
@@ -4476,9 +4559,8 @@ section#mission p {
 }
 #welcome p {
   line-height: 2.0;
+  text-align: justify;
 }
-/* @end */
-/* @group List Page */
 /* @end */
 /* @end */
 /* @group Media Queries
@@ -4487,88 +4569,11 @@ Styling for a range of screen sizes.
 =============================================================================*/
 /* Up to landscape phone */
 @media (max-width: 480px) {
-  h1.logo {
-    margin-right: auto;
-    margin-left: auto;
-  }
-  .nav-pills {
-    background: #eeeeee;
-  }
-  .nav-pills > li {
-    width: 50%;
-  }
-  .nav-pills > li > a {
-    font-size: 20px;
-    padding: 20px 0;
-    width: 100%;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-  }
-  .dropdown-menu a {
-    font-size: 16px;
-    padding: 8px 15px;
-  }
-  nav#social {
-    text-align: center;
-  }
+  
 }
 /* Landscape phone to portrait tablet */
 @media (max-width: 768px) {
-  h1.logo {
-    background-size: 225px 75px;
-    height: 75px;
-    width: 225px;
-  }
-  /*  nav.primary {
-      > ul {
-        text-align: center;
-        > li {
-          display: inline-block;
-          float: none;
-        }
-      }
-      ul.dropdown-menu {
-        text-align: left;
-      }
-    }*/
-  nav#social .schedule a {
-    font-size: 12px;
-    text-align: center;
-  }
-  .wrapper-carousel {
-    margin-bottom: 0px;
-  }
-  section.primary {
-    margin-bottom: 0;
-  }
-  section.primary > [class*="span"] {
-    *zoom: 1;
-    display: block;
-  }
-  section.primary > [class*="span"]:before,
-  section.primary > [class*="span"]:after {
-    display: table;
-    content: "";
-  }
-  section.primary > [class*="span"]:after {
-    clear: both;
-  }
-  #wrapper-mission {
-    padding: 10px 0;
-  }
-  section#mission p {
-    font-size: 16px;
-  }
-  #welcome {
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  #send-me,
-  #two-forty-two {
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
+  
 }
 /* Portrait tablet to default desktop */
 @media (min-width: 768px) and (max-width: 980px) {
@@ -4576,29 +4581,15 @@ Styling for a range of screen sizes.
 }
 /* Tablets and below */
 @media (max-width: 980px) {
-  body,
-  #wrapper-header {
-    padding-right: 0;
-    padding-left: 0;
-  }
-  .container {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+  
 }
 /* Large desktop and up */
 @media (min-width: 1200px) {
-  .post .attachment-feature {
-    margin-left: -20%;
-  }
+  
 }
 /* @end */
 /* @group Legacy Browsers
 =============================================================================
 Styling and fixes for legacy browsers.
 =============================================================================*/
-.no-cssgradient {
-  /* fix me! */
-
-}
 /* @end */

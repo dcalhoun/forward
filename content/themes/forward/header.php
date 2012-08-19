@@ -33,7 +33,7 @@
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="<?php bloginfo('template_directory'); ?>/assets/css/fonts.css" type="text/css" media="screen">
   <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
-  <link rel="stylesheet" href="<?php bloginfo('template_directory'); ?>/assets/css/responsive.css" type="text/css" media="screen">
+  <!-- <link rel="stylesheet" href="<?php bloginfo('template_directory'); ?>/assets/css/responsive.css" type="text/css" media="screen"> -->
 
   <!-- ### Place all scripts (excluding Modernizr) at bottom of the document. ### -->
   <script src="<?php echo bloginfo('template_directory'); ?>/assets/js/modernizr-2.0.6.js" type="text/javascript"></script>
@@ -43,32 +43,38 @@
 <body <?php body_class(); ?>>
   <div id="wrapper-header" class="container">
     <div class="row">
-      <header class="primary span4">
+      <header id="header-primary" class="span4">
         <h1 class="logo">
           <a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
         </h1>
       </header>
 
-      <nav class="primary span4">
-        <?php
-          $args = array(
-            'container'      => false,
-            'depth'          => 2,
-            'menu_class'     => 'nav nav-pills hidden-phone',
-            'theme_location' => 'primary',
-            'walker'         => new Bootstrap_Walker_Nav_Menu()
-          );
-          wp_nav_menu($args);
-        ?>
-      </nav>
-
-      <nav id="social" class="span4">
+      <nav id="nav-social" class="span8">
         <?php wp_nav_menu(array('theme_location' => 'social', 'container' => false, 'menu_class' => 'unstyled horz')); ?>
       </nav>
+    </div>
+  </div>
 
-      <nav id="nav-mobile" class="span12">
-        <?php wp_nav_menu(array('theme_location' => 'mobile', 'container' => false, 'menu_class' => 'unstyled horz visible-phone')); ?>
+  <div class="wrapper-nav-primary">
+    <div class="container">
+
+      <nav id="nav-primary" class="row">
+        <div class="span12">
+
+          <?php
+            $args = array(
+              'container'      => false,
+              'depth'          => 2,
+              'menu_class'     => '',
+              'theme_location' => 'primary',
+            );
+
+            wp_nav_menu($args);
+          ?>
+
+        </div>
       </nav>
+
     </div>
   </div>
 
