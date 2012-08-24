@@ -3,6 +3,7 @@
   var goToURL;
 
   $(function() {
+    $('#featured-slides').find('img').on('click', goToURL);
     return $('.carousel').carouFredSel({
       auto: false,
       align: 'center',
@@ -34,7 +35,9 @@
   goToURL = function() {
     var url;
     url = $(this).attr('data-url');
-    return window.location.href = url;
+    if (!!url) {
+      return window.location.href = url;
+    }
   };
 
 }).call(this);
