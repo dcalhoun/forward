@@ -1,4 +1,18 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 1.9
+    - Updated Group logic to keep existing groups.
+    - Added filter to change logic back to overriding groups
+        add_filter("gform_mailchimp_keep_existing_groups", "__return_false");
+    - Updated to treat members as if they were a new subscribe request when currently set to a status on MailChimp's side of unsubscribed, pending, cleaned
+    - Fixed issue with special characters in MailChimp Group names causing issues when creating feed.
+
+------------------------------------------------------------------------------------------------------------------
+Version 1.8
+    - Fixed issue with GetFieldValues() when used with groups; was returning full select when only options were required
+	- Fixed notices
+	- Fixed group names (commas in names are treated by MailChimp as a delimiter indicating multiple groups)
+
+------------------------------------------------------------------------------------------------------------------
 Version 1.7
 	- Fixed issue with some Mapped Fields not being passed (Entry Date, User IP, Source Url, Form Title)
     - Added new conditional logic options (greater than, less than, contains starts with, ends with) and support for other conditional fields

@@ -33,8 +33,8 @@ if (function_exists('add_theme_support')) {
 
 // Create thumbnail image size
 if (function_exists('add_image_size')) {
-  add_image_size('slide', 400, 267, true);
-  add_image_size('feature', 800, 9999, true);
+  add_image_size('slide', 1278, 853, false);
+  add_image_size('feature', 800, 0, true);
 }
 
 // Register widgitized areas

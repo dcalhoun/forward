@@ -16,9 +16,9 @@
 =============================================================================
 Styling for default HTML elements.
 =============================================================================*/
-html, body {
-  width: 100%;
-}
+// html, body {
+//   width: 100%;
+// }
 
 body {
   color: @grayLight;
@@ -92,11 +92,11 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background: fadeOut(@forwardGreen, 50%);
+  background: fadeout(@forwardGreen, 50%);
   color: darken(@forwardGreen, 25%);
 }
 ::-moz-selection {
-  background: fadeOut(@forwardGreen, 50%);
+  background: fadeout(@forwardGreen, 50%);
   color: darken(@forwardGreen, 25%);
 }
 /* @end */
@@ -119,14 +119,19 @@ ul.horz li { display: inline-block; }
   font-family: Pictos;
 }
 
+.nav-slide-wrapper {
+
+}
+
 .control {
   .at2x('../images/btn-carousel.png', auto, 57px);
   // background: transparent url('../images/btn-carousel.png') no-repeat 0 0;
   display: block;
   height: 57px;
+  margin-top: -28px;
   opacity: 0.75;
   position: absolute;
-  top: 38%;
+  top: 50%;
   width: 57px;
   z-index: 2;
   .hide-text();
@@ -209,8 +214,8 @@ Styling for structure of the site.
 .wrapper-nav-primary {
   .at2x('../images/bg-cross.png', 6px, 6px);
   background-color: @green;
-  .box-shadow(inset 0 0 6px fadeOut(@black, 50%));
-  margin-bottom: 45px;
+  .box-shadow(inset 0 0 6px fadeout(@black, 50%));
+  margin-bottom: 40px;
 }
 
 #nav-primary {
@@ -228,29 +233,29 @@ Styling for structure of the site.
     margin-right: -4px;
 
     &:first-child {
-      border-left: 1px solid fadeOut(@black, 65%);
+      border-left: 1px solid fadeout(@black, 65%);
     }
 
     &:last-child {
-      border-right: 1px solid fadeOut(@white, 70%);
+      border-right: 1px solid fadeout(@white, 70%);
     }
 
     &.current-menu-item a {
-      background-color: fadeOut(@black, 90%);
+      background-color: fadeout(@black, 90%);
     }
   }
 
   a {
-    border-right: 1px solid fadeOut(@black, 65%);
-    border-left: 1px solid fadeOut(@white, 70%);
+    border-right: 1px solid fadeout(@black, 65%);
+    border-left: 1px solid fadeout(@white, 70%);
     color: @white;
     display: block;
     padding: 12px 34px;
-    text-shadow: 1px 1px 2px fadeOut(@black, 60%);
+    text-shadow: 1px 1px 2px fadeout(@black, 60%);
     .transition(background 0.4s ease-out);
 
     &:hover {
-      background-color: fadeOut(@black, 90%);
+      background-color: fadeout(@black, 90%);
     }
   }
 }

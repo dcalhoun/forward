@@ -27,7 +27,7 @@
   <meta name="author" content="">
   <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
 
   <!-- ### Stylesheets ### -->
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -82,6 +82,6 @@
     // Start a container wrapper if it's not using the front page template.
     $template = get_post_meta( $post->ID, '_wp_page_template', true );
     if ($template != 'front.php') {
-      echo '<div class="container">';
+      echo '<div id="content-primary" class="container">';
     }
   ?>

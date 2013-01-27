@@ -6,11 +6,11 @@ $ ->
     align         : 'center'
     circular      : true
     items:
-      height      : 266
+      height      : 450
       minimum     : 1
       visible:
-        min       : 3
-        max       : 3
+        min       : 1
+        max       : 1
       width       : 400
     next:
       button      : '.next'
