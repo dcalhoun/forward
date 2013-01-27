@@ -37,7 +37,7 @@ get_header(); ?>
       );
       $slides = new WP_Query($args);
       $slide_count = $slides->post_count;
-      $needed_images = 3 - $slide_count;
+      $needed_images = 1 - $slide_count;
     ?>
 
     <a href="#" class="control prev">Prev</a>

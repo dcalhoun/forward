@@ -4531,6 +4531,7 @@ section#mission p {
 #two-forty-two {
   background-repeat: no-repeat;
   display: inline-block;
+  vertical-align: top;
   overflow: hidden;
   text-indent: 100%;
   white-space: nowrap;

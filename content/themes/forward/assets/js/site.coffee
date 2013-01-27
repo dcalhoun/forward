@@ -7,7 +7,7 @@ $ ->
     circular      : true
     items:
       height      : 450
-      minimum     : 1
+      minimum     : 2
       visible:
         min       : 1
         max       : 1
