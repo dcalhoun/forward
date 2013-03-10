@@ -1,3 +1,5 @@
+require 'mt-capistrano'
+
 # Customize this file, and then rename it to config.rb
 
 set :application, "forward"
@@ -9,7 +11,6 @@ set :scm, :git
 set :git_enable_submodules, 1
 
 # Forward SSH agent
-set :use_sudo, false
 ssh_options[:forward_agent] = true
 # ssh_options[:verbose] = :debug
 
