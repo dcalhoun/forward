@@ -2,7 +2,8 @@
 # Customize it and rename it as production.rb
 
 # Where should the site deploy to?
-set :deploy_to, "/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments"
+set :deploy_to, "/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments/forward"
+set :user,      "davidcalhoun.me"
 
 # Now configure the servers for this environment
 

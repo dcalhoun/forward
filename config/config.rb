@@ -14,7 +14,7 @@ ssh_options[:verbose] = :debug
 # default_run_options[:pty] = true
 
 # This should be the same as :deploy_to in production.rb
-set :production_deploy_to, '/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments'
+set :production_deploy_to, '/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments/forward'
 
 # The domain name used for your staging environment
 set :staging_domain, 'staging.example.com'
