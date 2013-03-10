@@ -8,7 +8,7 @@ set :deploy_to, "/home/115810/users/.home/domains/davidcalhoun.me/capistrano_dep
 
 # OPTION 1
 
-role :web, "davidcalhoun.me"
+role :web, "s115810.gridserver.com"
 # role :web, "second web server here"
 # role :web, "third web server here, etc"
 
