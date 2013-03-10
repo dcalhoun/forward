@@ -3,21 +3,21 @@
 // Load database info and local development parameters
 // ===================================================
 if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-	define( 'WP_LOCAL_DEV', true );
-	include( dirname( __FILE__ ) . '/local-config.php' );
+  define( 'WP_LOCAL_DEV', true );
+  include( dirname( __FILE__ ) . '/local-config.php' );
 } else {
-	define( 'WP_LOCAL_DEV', false );
-	define( 'DB_NAME', 'db115810_forward' );
-	define( 'DB_USER', 'db115810' );
-	define( 'DB_PASSWORD', 'jackson2829' );
-	define( 'DB_HOST', 'internal-db.s115810.gridserver.com' ); // Probably 'localhost'
+  define( 'WP_LOCAL_DEV', false );
+  define( 'DB_NAME', '%%DB_NAME%%' );
+  define( 'DB_USER', '%%DB_USER%%' );
+  define( 'DB_PASSWORD', '%%DB_PASSWORD%%' );
+  define( 'DB_HOST', '%%DB_HOST%%' ); // Probably 'localhost'
 }
 
 // ========================
 // Custom Content Directory
 // ========================
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/forward/content' );
+define( 'WP_CONTENT_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/content' );
 
 // ================================================
 // You almost certainly do not want to change these
@@ -63,9 +63,21 @@ define( 'WP_DEBUG_DISPLAY', false );
 // define( 'SAVEQUERIES', true );
 // define( 'WP_DEBUG', true );
 
+// ======================================
+// Load a Memcached config if we have one
+// ======================================
+if ( file_exists( dirname( __FILE__ ) . '/memcached.php' ) )
+  $memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
+
+// ===========================================================================================
+// This can be used to programatically set the stage when deploying (e.g. production, staging)
+// ===========================================================================================
+define( 'WP_STAGE', '%%WP_STAGE%%' );
+define( 'STAGING_DOMAIN', '%%WP_STAGING_DOMAIN%%' ); // Does magic in WP Stack to handle staging domain rewriting
+
 // ===================
 // Bootstrap WordPress
 // ===================
 if ( !defined( 'ABSPATH' ) )
-	define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
+  define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
 require_once( ABSPATH . 'wp-settings.php' );

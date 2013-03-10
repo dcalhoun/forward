@@ -1,5 +1,0 @@
-production:
-  domain: "davidcalhoun.me@s115810.gridserver.com"
-  deploy_to: "/home/115810/users/.home/domains/davidcalhoun.me/clients/forward"
-  repository: "git@github.com:dcalhoun/forward.git"
-  branch: "master"
