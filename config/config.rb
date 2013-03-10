@@ -9,6 +9,7 @@ set :scm, :git
 
 # Using Git Submodules?
 set :git_enable_submodules, 1
+set :use_sudo, false
 
 # Forward SSH agent
 ssh_options[:forward_agent] = true
