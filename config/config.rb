@@ -9,9 +9,9 @@ set :scm, :git
 set :git_enable_submodules, 1
 
 # Forward SSH agent
+set :use_sudo, false
 ssh_options[:forward_agent] = true
-ssh_options[:verbose] = :debug
-# default_run_options[:pty] = true
+# ssh_options[:verbose] = :debug
 
 # This should be the same as :deploy_to in production.rb
 set :production_deploy_to, '/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments/forward'
