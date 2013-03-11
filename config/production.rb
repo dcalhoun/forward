@@ -4,7 +4,6 @@
 # Where should the site deploy to?
 set :deploy_to, "/home/115810/users/.home/domains/davidcalhoun.me/capistrano_deployments/forward"
 set :user,      "davidcalhoun.me"
-set :use_sudo, false
 
 # Now configure the servers for this environment
 
